@@ -6,4 +6,5 @@ Imitates python-script 'StromPi3_Status.py' provided by joy-it (https://strompi.
 Output:
 https://github.com/helmischelmi/net-strompi3/blob/master/rpi_StromPi3_Status.png
 
-Adopt publishxx.bat according to your needs or use WinSCP to transfer the files to the raspi.
+publishxx.bat runs on post-build, to trnsfer files to the raspi.
+Adopt publishxx.bat according to your needs or use WinSCP to transfer the files.
