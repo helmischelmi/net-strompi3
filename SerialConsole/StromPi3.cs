@@ -799,7 +799,7 @@ namespace SerialConsole
                 UseShellExecute = false,
                 RedirectStandardOutput = true,
                 RedirectStandardError = true,
-                Arguments = arguments,   // date -s '2014-12-25 12:34:56'
+                Arguments = arguments, 
             };
 
             process = Process.Start(start);
