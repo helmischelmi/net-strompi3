@@ -1,8 +1,11 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Diagnostics;
+using System.IO;
 using System.IO.Ports;
 using System.Linq;
 using System.Reflection;
+using System.Threading;
 
 namespace SerialConsole
 {
@@ -181,7 +184,7 @@ namespace SerialConsole
                 public int Day { get; private set; }
                 public int Month { get; private set; }
                 public EWeekday Weekday { get; private set; }
-                
+
                 public enum EAlarmMode
                 {
                     [Description("nothing")]
@@ -208,7 +211,7 @@ namespace SerialConsole
                     Saturday = 6,
                     Sunday = 7,
                 }
-                
+
                 public void SetEnabled(string sp3AlarmEnable)
                 {
                     Enabled = EnabledDisabledConverter(sp3AlarmEnable, "sp3AlarmEnable");
@@ -459,8 +462,11 @@ namespace SerialConsole
 
         public void ReadStatus()
         {
-            //GetSerialProperties();
-            Console.WriteLine("Strompi3- State:");
+            if (_serialPort.IsOpen) _serialPort.Close();
+            _serialPort.Open();
+
+            // GetSerialProperties();
+            Console.WriteLine("Read Strompi3-State");
 
             _serialPort.Write("quit");
             _serialPort.Write("\r"); // \x0d = {13} Carriage Return
@@ -545,6 +551,89 @@ namespace SerialConsole
             _serialPort.Close();
         }
 
+        /// <summary>
+        /// Compares the actual SystemTime of the Raspberry Pi with the RTC of StromPi3.
+        /// In the case of a deviation, the more recent time is adopted.
+        /// Ports RTCSerial.py from joy-it
+        /// </summary>
+        public void SyncRTC()
+        {
+            // workaround to get the current settings,
+            // because commands '"date-rpi' and '"time-rpi' don't work (produce timeout..) until now
+            ReadStatus();
+
+            if (_serialPort.IsOpen) _serialPort.Close();
+            _serialPort.Open();
+
+            Console.WriteLine("TimeSync-Process | Please Wait");
+
+            //_serialPort.Write("Q");
+            //Thread.Sleep(1000);
+            //_serialPort.Write("\r"); // \x0d = {13} Carriage Return
+            //Thread.Sleep(1000);
+            //TODO: doesn't seem to work, following _serialPort.Readline() runs into timeout..
+            //_serialPort.Write("date-rpi");
+            //Thread.Sleep(100);
+            //_serialPort.Write("\r");
+            //string sp3Date = _serialPort.ReadLine();
+            //Thread.Sleep(100);
+            //_serialPort.Write("time-rpi");
+            //Thread.Sleep(100);
+            //_serialPort.Write("\r");
+            //string sp3Time = _serialPort.ReadLine();
+            //State.SetCurrentDateTime(sp3Time, sp3Date);
+
+            Console.WriteLine($"StromPi3: Current dateTime {State.CurrentDateTime} ");
+            var rpiDateTime = DateTime.Now;
+            Console.WriteLine($"Raspi: Current dateTime {rpiDateTime} ");
+          
+            if (rpiDateTime > State.CurrentDateTime) // sync the Strompi
+            {
+                Console.WriteLine("The date und time will be synced: Raspberry Pi -> StromPi'");
+
+                int dayOfWeekPython = (int)rpiDateTime.DayOfWeek;
+                
+                // map value of sunday (0 in .net to 7 on Strompi3)
+                if (dayOfWeekPython == 0) dayOfWeekPython = 7;
+
+                string argumentsDate =$"{rpiDateTime.Day:D2} {rpiDateTime.Month:D2} {rpiDateTime.Year % 100:D2} {dayOfWeekPython}";
+
+                Console.WriteLine($"serial write 'set-date {argumentsDate}'");
+
+                _serialPort.Write($"set-date {argumentsDate}");
+                Thread.Sleep(500);
+                _serialPort.Write("\r");
+                Thread.Sleep(1000);
+
+                string argumentsTime =$"{rpiDateTime.Hour:D2} {rpiDateTime.Minute:D2} {rpiDateTime.Second:D2}";
+
+                Console.WriteLine($"serial write 'set-clock {argumentsTime}'");
+                _serialPort.Write($"set-clock {argumentsTime}");
+
+                Thread.Sleep(500);
+                _serialPort.Write("\r");
+
+                _serialPort.Close();
+
+                ReadStatus();  // re-read to get the updated datetime
+
+                Console.WriteLine("-----------------------------------");
+                Console.WriteLine("The date und time has been synced: Raspberry Pi -> StromPi'");
+                Console.WriteLine($"Strompi3 is up-to-date:  {State.CurrentDateTime}");
+                Console.WriteLine("-----------------------------------");
+            }
+
+            if (rpiDateTime < State.CurrentDateTime) // sync the Raspi 
+            {   //TODO: not tested so far..
+
+                Console.WriteLine("The date und time will be synced: StromPi -> Raspberry Pi'");
+                OsDateTime(State.CurrentDateTime);
+
+                Console.WriteLine("-----------------------------------");
+                Console.WriteLine("The date und time has been synced: StromPi -> Raspberry Pi'");
+                Console.WriteLine("-----------------------------------");
+            }
+        }
 
 
         private void ReceivedData(object sender, SerialDataReceivedEventArgs e)
@@ -684,6 +773,49 @@ namespace SerialConsole
             }
 
             return value.ToString();
+        }
+
+        /// <summary>
+        /// wraps os call setting system date, see https://linux.die.net/man/1/date
+        /// </summary>
+        /// <param name="dateTime"></param>
+        /// <returns></returns>
+        public static void OsDateTime(DateTime dateTime)
+        {
+            //os-call: sudo date -s '2014-12-25 12:34:56'
+            string exe = $"sudo date";
+            string arguments = $" -s {dateTime.Year}-{dateTime.Month}-{dateTime.Day}" +
+                               $" {dateTime.Hour}:{dateTime.Minute}:{dateTime.Second}";
+
+            Console.WriteLine($"CALL: {exe} {arguments}");
+
+            var sw = new Stopwatch();
+            var process = new Process();
+
+            sw.Start();
+            var start = new ProcessStartInfo
+            {
+                FileName = exe,
+                UseShellExecute = false,
+                RedirectStandardOutput = true,
+                RedirectStandardError = true,
+                Arguments = arguments,   // date -s '2014-12-25 12:34:56'
+            };
+
+            process = Process.Start(start);
+            process.WaitForExit();
+            sw.Stop();
+
+            string error, result;
+
+            // read std output and std-error 
+            using (StreamReader sr = process.StandardOutput)
+            {
+                error = process.StandardError.ReadToEnd();
+                result = sr.ReadToEnd();
+            }
+
+            Console.WriteLine($"result: {result}, error: {error}");
         }
     }
 }

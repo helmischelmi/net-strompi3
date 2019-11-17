@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO.Ports;
 
 namespace SerialConsole
@@ -7,6 +8,7 @@ namespace SerialConsole
     {
         static void Main(string[] args)
         {
+
 
             // Get a list of serial port names.
             string[] ports = SerialPort.GetPortNames();
@@ -27,19 +29,19 @@ namespace SerialConsole
             // Strompi3 - Serial UART - Interface
             using (StromPi3 ups = new StromPi3())
             {
+                var sw = new Stopwatch();
+                sw.Start();
                 ups.ReadStatus();
-
+                sw.Stop();
+                Console.WriteLine($"Read Status in {sw.ElapsedMilliseconds/1000:F4} secs");
                 Console.WriteLine(ups);
+
+                sw.Restart();
+                ups.SyncRTC();
+                sw.Stop();
+                Console.WriteLine($"Sync RTC in {sw.ElapsedMilliseconds/1000:F4} secs");
             }
         }
-
-        private static void MySer_DataReceived(object sender, SerialDataReceivedEventArgs e)
-        {
-            var s = e.EventType.ToString();
-
-            Console.WriteLine($"Received: {s}");
-        }
-
     }
 }
 
