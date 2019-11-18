@@ -9,7 +9,6 @@ namespace SerialConsole
         static void Main(string[] args)
         {
 
-
             // Get a list of serial port names.
             string[] ports = SerialPort.GetPortNames();
             Console.WriteLine("The following serial ports were found:");
@@ -40,6 +39,10 @@ namespace SerialConsole
                 ups.SyncRTC();
                 sw.Stop();
                 Console.WriteLine($"Sync RTC in {sw.ElapsedMilliseconds/1000:F4} secs");
+
+                ups.PollingShutDownOnPowerFailure();
+
+
             }
         }
     }

@@ -5,6 +5,7 @@ using System.IO;
 using System.IO.Ports;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Threading;
 
 namespace SerialConsole
@@ -19,6 +20,10 @@ namespace SerialConsole
         private SerialPortParameter _portParameter;
         private SerialPort _serialPort;
         public StromPi3State State { get; }
+
+        private const string PowerFailureMessage = "ShutdownRaspberryPi";
+        private const string PowerBackMessage = "StromPiPowerBack";
+
 
         public class StromPi3State
         {
@@ -586,17 +591,17 @@ namespace SerialConsole
             Console.WriteLine($"StromPi3: Current dateTime {State.CurrentDateTime} ");
             var rpiDateTime = DateTime.Now;
             Console.WriteLine($"Raspi: Current dateTime {rpiDateTime} ");
-          
+
             if (rpiDateTime > State.CurrentDateTime) // sync the Strompi
             {
                 Console.WriteLine("The date und time will be synced: Raspberry Pi -> StromPi'");
 
                 int dayOfWeekPython = (int)rpiDateTime.DayOfWeek;
-                
+
                 // map value of sunday (0 in .net to 7 on Strompi3)
                 if (dayOfWeekPython == 0) dayOfWeekPython = 7;
 
-                string argumentsDate =$"{rpiDateTime.Day:D2} {rpiDateTime.Month:D2} {rpiDateTime.Year % 100:D2} {dayOfWeekPython}";
+                string argumentsDate = $"{rpiDateTime.Day:D2} {rpiDateTime.Month:D2} {rpiDateTime.Year % 100:D2} {dayOfWeekPython}";
 
                 Console.WriteLine($"serial write 'set-date {argumentsDate}'");
 
@@ -605,7 +610,7 @@ namespace SerialConsole
                 _serialPort.Write("\r");
                 Thread.Sleep(1000);
 
-                string argumentsTime =$"{rpiDateTime.Hour:D2} {rpiDateTime.Minute:D2} {rpiDateTime.Second:D2}";
+                string argumentsTime = $"{rpiDateTime.Hour:D2} {rpiDateTime.Minute:D2} {rpiDateTime.Second:D2}";
 
                 Console.WriteLine($"serial write 'set-clock {argumentsTime}'");
                 _serialPort.Write($"set-clock {argumentsTime}");
@@ -627,12 +632,107 @@ namespace SerialConsole
             {   //TODO: not tested so far..
 
                 Console.WriteLine("The date und time will be synced: StromPi -> Raspberry Pi'");
-                OsDateTime(State.CurrentDateTime);
+                Os.SetDateTime(State.CurrentDateTime);
 
                 Console.WriteLine("-----------------------------------");
                 Console.WriteLine("The date und time has been synced: StromPi -> Raspberry Pi'");
                 Console.WriteLine("-----------------------------------");
             }
+        }
+
+
+        /// <summary>
+        /// Polls the powerFail-warning- (if enabled in configuration) and powerBack-signal. 
+        /// </summary>
+        /// <param name="waitForPowerBackTimerSeconds">seconds to wait for a powerBack-signal before shutting down the Raspberry pi.
+        /// This must be set - or will be forced - lower than the configured shutdown-timer to make a safe shutdown.</param>
+        public void PollingShutDownOnPowerFailure(int waitForPowerBackTimerSeconds = 10)
+        {
+            bool runCountdown = false;
+            DateTime powerFailureStartTime = default;
+            string data = String.Empty;
+
+            Console.WriteLine($"PollingShutDownOnPowerFailure (wait {waitForPowerBackTimerSeconds} secs)");
+
+            if (!HasValidStrompiSettings(waitForPowerBackTimerSeconds)) return;
+
+            //start polling the serial port of strompi3 
+            if (_serialPort.IsOpen) _serialPort.Close();
+            _serialPort.Open();
+
+            while (true)
+            {
+                Thread.Sleep(100);
+                try
+                {
+                    data = _serialPort.ReadLine();
+                }
+                catch (TimeoutException) { }  // ignore timeouts
+
+                var powerFailureSignal = SetPowerFailureSignal(data);
+                var powerBackSignal = SetPowerBackSignal(data);
+
+                if (powerFailureSignal || runCountdown)
+                {
+                    if (runCountdown == false)
+                    {
+                        runCountdown = true;
+                        powerFailureStartTime = DateTime.Now;
+                    }
+
+                    int countdownSeconds = Convert.ToInt32((DateTime.Now - powerFailureStartTime).TotalSeconds);
+                    Console.WriteLine($"PowerFail - run countdown to shutdown the Pi ({waitForPowerBackTimerSeconds - countdownSeconds} secs)");
+
+                    if (countdownSeconds >= waitForPowerBackTimerSeconds)
+                    {
+                        _serialPort.Close();
+                        Console.WriteLine($"Raspberry Pi: running shutdown...");
+                        Thread.Sleep(500);
+                        Os.ShutDown();
+                    }
+                }
+
+                if (powerBackSignal)
+                {
+                    Console.WriteLine("PowerBack - aborting Raspberry Pi shutdown");
+                    runCountdown = false;
+                }
+            }
+        }
+
+        private bool SetPowerFailureSignal(string data)
+        {
+            return data.Contains(PowerFailureMessage);
+        }
+
+        private bool SetPowerBackSignal(string data)
+        {
+            return data.Contains(PowerBackMessage);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="seconds"></param>
+        /// <returns></returns>
+        private bool HasValidStrompiSettings(int seconds)
+        {
+            if (seconds >= State.ShutdownSeconds)  // force to be 10 secs lower 
+            {
+                seconds = State.ShutdownSeconds - 10;
+                Console.WriteLine($"***warning: lowered value of waitForPowerBackTimerSeconds to {seconds} secs.");
+
+                if (seconds <= 0)
+                {
+                    Console.WriteLine($"***error: invalid waitForShutdowntimerSeconds [{seconds}] secs! PollingShutDownOnPowerFailure will fail!");
+                    return false;
+                }
+            }
+
+            if (State.PowerFailWarningEnable) return true;
+
+            Console.WriteLine("***error: PollingShutDownOnPowerFailure will fail, because PowerFailwarning of Strompi3 is NOT enabled!");
+            return false;
         }
 
 
@@ -775,47 +875,6 @@ namespace SerialConsole
             return value.ToString();
         }
 
-        /// <summary>
-        /// wraps os call setting system date, see https://linux.die.net/man/1/date
-        /// </summary>
-        /// <param name="dateTime"></param>
-        /// <returns></returns>
-        public static void OsDateTime(DateTime dateTime)
-        {
-            //os-call: sudo date -s '2014-12-25 12:34:56'
-            string exe = $"sudo date";
-            string arguments = $" -s {dateTime.Year}-{dateTime.Month}-{dateTime.Day}" +
-                               $" {dateTime.Hour}:{dateTime.Minute}:{dateTime.Second}";
 
-            Console.WriteLine($"CALL: {exe} {arguments}");
-
-            var sw = new Stopwatch();
-            var process = new Process();
-
-            sw.Start();
-            var start = new ProcessStartInfo
-            {
-                FileName = exe,
-                UseShellExecute = false,
-                RedirectStandardOutput = true,
-                RedirectStandardError = true,
-                Arguments = arguments, 
-            };
-
-            process = Process.Start(start);
-            process.WaitForExit();
-            sw.Stop();
-
-            string error, result;
-
-            // read std output and std-error 
-            using (StreamReader sr = process.StandardOutput)
-            {
-                error = process.StandardError.ReadToEnd();
-                result = sr.ReadToEnd();
-            }
-
-            Console.WriteLine($"result: {result}, error: {error}");
-        }
     }
 }
