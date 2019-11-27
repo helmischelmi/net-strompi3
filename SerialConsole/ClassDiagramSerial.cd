@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1">
   <Class Name="SerialConsole.SerialPortParameter">
-    <Position X="0.5" Y="0.5" Width="1.5" />
+    <Position X="0.5" Y="0.5" Width="1.75" />
     <TypeIdentifier>
       <HashCode>AKAAAAAAAAAAQAAEAAAAAAgEAAAQAAAAAAAEAAAUAAA=</HashCode>
       <FileName>SerialPortParameter.cs</FileName>
@@ -30,35 +30,11 @@
             </TypeIdentifier>
           </Class>
           <Class Name="SerialConsole.StromPi3.StromPi3State.StromPi3Battery" Collapsed="true">
-            <NestedTypes>
-              <Enum Name="SerialConsole.StromPi3.StromPi3State.StromPi3Battery.EShutdownLevel" Collapsed="true">
-                <TypeIdentifier>
-                  <NewMemberFileName>StromPi3.cs</NewMemberFileName>
-                </TypeIdentifier>
-              </Enum>
-              <Enum Name="SerialConsole.StromPi3.StromPi3State.StromPi3Battery.EBatteryLevel" Collapsed="true">
-                <TypeIdentifier>
-                  <NewMemberFileName>StromPi3.cs</NewMemberFileName>
-                </TypeIdentifier>
-              </Enum>
-            </NestedTypes>
             <TypeIdentifier>
               <NewMemberFileName>StromPi3.cs</NewMemberFileName>
             </TypeIdentifier>
           </Class>
           <Class Name="SerialConsole.StromPi3.StromPi3State.StromPi3Alarm" Collapsed="true">
-            <NestedTypes>
-              <Enum Name="SerialConsole.StromPi3.StromPi3State.StromPi3Alarm.EAlarmMode" Collapsed="true">
-                <TypeIdentifier>
-                  <NewMemberFileName>StromPi3.cs</NewMemberFileName>
-                </TypeIdentifier>
-              </Enum>
-              <Enum Name="SerialConsole.StromPi3.StromPi3State.StromPi3Alarm.EWeekday" Collapsed="true">
-                <TypeIdentifier>
-                  <NewMemberFileName>StromPi3.cs</NewMemberFileName>
-                </TypeIdentifier>
-              </Enum>
-            </NestedTypes>
             <TypeIdentifier>
               <NewMemberFileName>StromPi3.cs</NewMemberFileName>
             </TypeIdentifier>
@@ -80,7 +56,7 @@
       </Class>
     </NestedTypes>
     <TypeIdentifier>
-      <HashCode>EAAAAAAAACACCAAEACAAIIEAAAAAAAAAAAAABoAAAAA=</HashCode>
+      <HashCode>EAAACAAAACASCAEEACCAJIEAAAAAAAAAAAAARoAACAA=</HashCode>
       <FileName>StromPi3.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />

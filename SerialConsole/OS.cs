@@ -71,7 +71,16 @@ namespace SerialConsole
                 result = sr.ReadToEnd();
             }
 
-            Console.WriteLine($"result: {result}, error: {error}");
+            if (String.IsNullOrWhiteSpace(error))
+            {
+                Console.WriteLine($"exit-code: {result}");
+            }
+            else
+            {
+                Console.WriteLine($"exit-code: {result}, error: {error}");
+            }
+
+            
         }
     }
 }

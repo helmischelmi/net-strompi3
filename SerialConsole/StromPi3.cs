@@ -431,8 +431,8 @@ namespace SerialConsole
             Parity parity = Parity.None;
 
             // Gets or sets the number of milliseconds before a time-out occurs when a read operation does not finish.
-            int readTimeout = 1500;
-            int writeTimeout = 1500;
+            int readTimeout = 1000;
+            int writeTimeout = 1000;
 
             _portParameter = new SerialPortParameter(portName, baudRate, parity, dataBits, stopBits, readTimeout, writeTimeout);
 
@@ -465,6 +465,143 @@ namespace SerialConsole
             Console.WriteLine($"---------------^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^-------------{Environment.NewLine}");
         }
 
+        /// <summary>
+        /// Allows editing the configuration-settings of StromPi3.
+        /// <para>Requires serial-mode</para>
+        /// <remarks>The functionality of strompi_config.py from joy-it is ported by this method.
+        /// </remarks>
+        /// </summary>
+        public void Configure()
+        {
+
+
+
+        }
+
+
+        public void StartSerialLessMode()
+        {
+            //import RPi.GPIO as GPIO
+            //import time
+            //import os
+            //import serial
+            //GPIO.setmode(GPIO.BCM)
+            //GPIO_TPIN = 21
+
+            //breakS = 0.1
+            //breakL = 0.2
+            //serial_port = serial.Serial()
+            //serial_port.baudrate = 38400
+            //serial_port.port = '/dev/serial0'
+            //serial_port.timeout = 1
+            //serial_port.bytesize = 8
+            //serial_port.stopbits = 1
+            //serial_port.parity = serial.PARITY_NONE
+
+            //if serial_port.isOpen(): serial_port.close()
+            //serial_port.open()
+
+            //serial_port.write(str.encode('quit'))
+            //time.sleep(breakS)
+            //serial_port.write(str.encode('\x0D'))
+            //time.sleep(breakL)
+            //serial_port.write(str.encode('set-config 0 2'))
+            //time.sleep(breakS)
+            //serial_port.write(str.encode('\x0D'))
+            //time.sleep(breakL)
+            //print ("Enabled Serialless")
+
+        }
+
+        public void StopSerialLessMode()
+        {
+            //            import RPi.GPIO as GPIO
+            //            import time
+            //            import os
+            //            import serial
+            //            GPIO.setmode(GPIO.BCM)
+            //            GPIO_TPIN = 21
+
+
+            //            GPIO.setup(GPIO_TPIN,GPIO.OUT)
+            //#GPIO.output(GPIO_TPIN, GPIO.HIGH)
+            //#print ("HIGH")
+            //#time.sleep(3)
+            //            GPIO.output(GPIO_TPIN, GPIO.LOW)
+            //            print ("Setting GPIO to LOW to Disable Serialless Mode.")
+            //            print ("This will take approx. 10 seconds.")
+            //            time.sleep(10)
+            //            GPIO.cleanup()
+            //            print ("Serialless Mode is Disabled!")
+
+        }
+
+                /// <summary>
+        /// IRQ-based method to get the powerFail-warning- (if enabled in configuration) and powerBack-signal.
+        /// <para>Requires serialless-mode</para>
+        /// </summary>
+        /// <param name="waitForPowerBackTimerSeconds">Seconds to wait for a powerBack-signal before shutting down the Raspberry pi.
+        /// This must be set - or will be forced - lower than the configured shutdown-timer to make a safe shutdown.</param>
+        public void ShutDownOnPowerFailure(int waitForPowerBackTimerSeconds = 10)
+        {
+            bool runCountdown = false;
+            DateTime powerFailureStartTime = default;
+            string data = String.Empty;
+
+            Console.WriteLine($"PollingShutDownOnPowerFailure (wait {waitForPowerBackTimerSeconds} secs)");
+
+            if (!HasValidStrompiSettings(waitForPowerBackTimerSeconds)) return;
+
+            //start polling the serial port of strompi3 
+            if (_serialPort.IsOpen) _serialPort.Close();
+            _serialPort.Open();
+
+            while (true)
+            {
+                Thread.Sleep(100);
+                try
+                {
+                    data = _serialPort.ReadLine();
+                }
+                catch (TimeoutException) { }  // ignore timeouts
+
+                var powerFailureSignal = SetPowerFailureSignal(data);
+                var powerBackSignal = SetPowerBackSignal(data);
+
+                if (powerFailureSignal || runCountdown)
+                {
+                    if (runCountdown == false)
+                    {
+                        runCountdown = true;
+                        powerFailureStartTime = DateTime.Now;
+                    }
+
+                    int countdownSeconds = Convert.ToInt32((DateTime.Now - powerFailureStartTime).TotalSeconds);
+                    Console.WriteLine($"PowerFail - run countdown to shutdown the Pi ({waitForPowerBackTimerSeconds - countdownSeconds} secs)");
+
+                    if (countdownSeconds >= waitForPowerBackTimerSeconds)
+                    {
+                        _serialPort.Close();
+                        Console.WriteLine($"Raspberry Pi: running shutdown...");
+                        Thread.Sleep(500);
+                        Os.ShutDown();
+                    }
+                }
+
+                if (powerBackSignal && runCountdown)
+                {
+                    Console.WriteLine("PowerBack - aborting Raspberry Pi shutdown");
+                    runCountdown = false;
+                }
+            }
+        }
+
+
+        /// <summary>
+        /// Reads all status-related characteristics of the Strompi3.
+        /// <para>
+        /// <remarks>Requires serial-mode</remarks></para>
+        /// </summary>
         public void ReadStatus()
         {
             if (_serialPort.IsOpen) _serialPort.Close();
@@ -559,7 +696,11 @@ namespace SerialConsole
         /// <summary>
         /// Compares the actual SystemTime of the Raspberry Pi with the RTC of StromPi3.
         /// In the case of a deviation, the more recent time is adopted.
-        /// Ports RTCSerial.py from joy-it
+        /// <para>Requires serial-mode</para>
+        /// <remarks>The functionality of RTCSerial.py from joy-it is ported by this method.The original py-script
+        /// uses commands 'Q', '\r', 'date-rpi' and 'time-rpi' to read the current datetime
+        /// of Strompi3. This steps could not be implemented successfully and were replaced by calling 'ReadStatus'.
+        /// </remarks>
         /// </summary>
         public void SyncRTC()
         {
@@ -571,23 +712,6 @@ namespace SerialConsole
             _serialPort.Open();
 
             Console.WriteLine("TimeSync-Process | Please Wait");
-
-            //_serialPort.Write("Q");
-            //Thread.Sleep(1000);
-            //_serialPort.Write("\r"); // \x0d = {13} Carriage Return
-            //Thread.Sleep(1000);
-            //TODO: doesn't seem to work, following _serialPort.Readline() runs into timeout..
-            //_serialPort.Write("date-rpi");
-            //Thread.Sleep(100);
-            //_serialPort.Write("\r");
-            //string sp3Date = _serialPort.ReadLine();
-            //Thread.Sleep(100);
-            //_serialPort.Write("time-rpi");
-            //Thread.Sleep(100);
-            //_serialPort.Write("\r");
-            //string sp3Time = _serialPort.ReadLine();
-            //State.SetCurrentDateTime(sp3Time, sp3Date);
-
             Console.WriteLine($"StromPi3: Current dateTime {State.CurrentDateTime} ");
             var rpiDateTime = DateTime.Now;
             Console.WriteLine($"Raspi: Current dateTime {rpiDateTime} ");
@@ -629,8 +753,8 @@ namespace SerialConsole
             }
 
             if (rpiDateTime < State.CurrentDateTime) // sync the Raspi 
-            {   //TODO: not tested so far..
-
+            {
+                //TODO: not tested so far..
                 Console.WriteLine("The date und time will be synced: StromPi -> Raspberry Pi'");
                 Os.SetDateTime(State.CurrentDateTime);
 
@@ -642,9 +766,10 @@ namespace SerialConsole
 
 
         /// <summary>
-        /// Polls the powerFail-warning- (if enabled in configuration) and powerBack-signal. 
+        /// Polls the powerFail-warning- (if enabled in configuration) and powerBack-signal.
+        /// <para>Requires serial-mode</para>
         /// </summary>
-        /// <param name="waitForPowerBackTimerSeconds">seconds to wait for a powerBack-signal before shutting down the Raspberry pi.
+        /// <param name="waitForPowerBackTimerSeconds">Seconds to wait for a powerBack-signal before shutting down the Raspberry pi.
         /// This must be set - or will be forced - lower than the configured shutdown-timer to make a safe shutdown.</param>
         public void PollingShutDownOnPowerFailure(int waitForPowerBackTimerSeconds = 10)
         {
@@ -692,7 +817,7 @@ namespace SerialConsole
                     }
                 }
 
-                if (powerBackSignal)
+                if (powerBackSignal && runCountdown)
                 {
                     Console.WriteLine("PowerBack - aborting Raspberry Pi shutdown");
                     runCountdown = false;

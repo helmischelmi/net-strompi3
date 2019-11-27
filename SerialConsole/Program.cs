@@ -42,7 +42,6 @@ namespace SerialConsole
 
                 ups.PollingShutDownOnPowerFailure();
 
-
             }
         }
     }
