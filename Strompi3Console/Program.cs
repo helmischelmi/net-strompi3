@@ -85,10 +85,8 @@ namespace Strompi3Console
                         case ConsoleKey.NumPad7:
                         case ConsoleKey.D8:
                         case ConsoleKey.NumPad8:
-                            break;
                         case ConsoleKey.D9:
                         case ConsoleKey.NumPad9:
-                            break;
                         case ConsoleKey.D0:
                         case ConsoleKey.NumPad0:
                             ShutDownRaspi();

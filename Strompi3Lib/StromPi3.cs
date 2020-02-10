@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Device.Gpio;
 using System.IO.Ports;
-using System.Net.Http.Headers;
 using System.Threading;
 
 namespace Strompi3Lib
@@ -14,16 +12,9 @@ namespace Strompi3Lib
         private const string PowerFailureMessage = "ShutdownRaspberryPi";
         private const string PowerBackMessage = "StromPiPowerBack";
 
-        private GpioController _gpioController;
-        private readonly int _gpioShutdownPinBoardNumber;
-
         public StromPi3(bool bSilent = false)
         {
-            _gpioController = new GpioController(PinNumberingScheme.Board);
-            _gpioShutdownPinBoardNumber = 40;
-
             Settings = new StromPi3Settings();
-
             Connect(bSilent);
         }
 
@@ -474,23 +465,7 @@ namespace Strompi3Lib
             Console.WriteLine($"Received: Eventtype {s}, ReadExisting {serialOutput}, Readline {serialOutline}");
         }
 
-        /// <summary>
-        /// Stops serialless mode by using the connecting gpio-pin.
-        /// <para>Requires serialless-mode</para>
-        /// <remarks>Ports the functionality of Stop_Serialless.py from joy-it.</remarks>
-        /// </summary>
-        public void StopSerialLessMode()
-        {
-            _gpioController.SetPinMode(_gpioShutdownPinBoardNumber, PinMode.Output);
-            _gpioController.Write(_gpioShutdownPinBoardNumber, PinValue.High);
-            Console.WriteLine($"set pin {_gpioShutdownPinBoardNumber} to HIGH (3 secs)");
-            Thread.Sleep(3000);
-            _gpioController.Write(_gpioShutdownPinBoardNumber, PinValue.Low);
-            Console.WriteLine($"set pin {_gpioShutdownPinBoardNumber} to LOW to Disable Serialless Mode.");
-            Console.WriteLine($"This will take approx. 10 seconds..");
-            Thread.Sleep(10000);
-            Console.WriteLine($"Serialless Mode is Disabled!");
-        }
+       
 
         /// <summary>
         /// Compares the actual SystemTime of the Raspberry Pi with the RTC of StromPi3.
@@ -567,7 +542,6 @@ namespace Strompi3Lib
         public void Dispose()
         {
             _serialPort.Dispose();
-            _gpioController.Dispose();
         }
 
         public override string ToString()

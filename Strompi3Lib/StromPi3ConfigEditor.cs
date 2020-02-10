@@ -1,10 +1,14 @@
 ﻿using System;
+using System.Device.Gpio;
 using System.Text.Encodings.Web;
+using System.Threading;
 
 namespace Strompi3Lib
 {
     public static class StromPi3ConfigEditor
     {
+        public const int GPIOShutdownPinBoardNumber = 40;
+
         //public static void EditInputPriorityMode(StromPi3 ups)
         //{
 
@@ -148,7 +152,7 @@ namespace Strompi3Lib
             ups.TransferSetting(ESetConfig.ShutdownEnable, ups.Settings.ShutdownEnable.ToNumber(), false);
             ups.TransferSetting(ESetConfig.ShutdownTimer, ups.Settings.ShutdownSeconds, false);
 
-            ups.TransferSetting(ESetConfig.ShutdownBatteryLevel, (int) ups.Settings.BatteryHat.ShutdownLevel);
+            ups.TransferSetting(ESetConfig.ShutdownBatteryLevel, (int)ups.Settings.BatteryHat.ShutdownLevel);
         }
 
 
@@ -160,10 +164,27 @@ namespace Strompi3Lib
 
             ups.Settings.SetSerialLessEnable(serialLessEnable.ToString());
 
-            Console.WriteLine($"Transfer Serial-Less Enable: {ups.Settings.SerialLessEnable}");
-            ups.TransferSetting(ESetConfig.SerialLessMode, ups.Settings.SerialLessEnable.ToNumber());
-
-            //TODO: in case serial less should be disabled, same action is needed here (Re-establish serial Ports)
+            if (ups.Settings.SerialLessEnable) // use serial port
+            {
+                Console.WriteLine($"Transfer Serial-Less Enable: {ups.Settings.SerialLessEnable}");
+                ups.TransferSetting(ESetConfig.SerialLessMode, ups.Settings.SerialLessEnable.ToNumber());
+            }
+            else // reset to serial port
+            {
+                using (var gpioController = new GpioController(PinNumberingScheme.Board))
+                {
+                    gpioController.OpenPin(GPIOShutdownPinBoardNumber);
+                    gpioController.SetPinMode(GPIOShutdownPinBoardNumber, PinMode.Output);
+                    gpioController.Write(GPIOShutdownPinBoardNumber, PinValue.High);
+                    Console.WriteLine($"set pin {GPIOShutdownPinBoardNumber} to HIGH (3 secs)");
+                    Thread.Sleep(3000);
+                    gpioController.Write(GPIOShutdownPinBoardNumber, PinValue.Low);
+                    Console.WriteLine($"set pin {GPIOShutdownPinBoardNumber} to LOW to Disable Serialless Mode.");
+                    Console.WriteLine($"This will take approx. 10 seconds..");
+                    Thread.Sleep(10000);
+                    Console.WriteLine($"Serialless Mode is Disabled!");
+                }
+            }
         }
 
 
