@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO.Ports;
+using System.Text;
 
-namespace SerialConsole
+namespace Strompi3Lib
 {
     /// <summary>
     /// parameters for serial communication
@@ -33,7 +35,7 @@ namespace SerialConsole
             WriteTimeout = writeTimeout;
         }
 
-        public SerialPort GetSerialPort()
+        public SerialPort InitializeSerialPort()
         {
             SerialPort result;
             try
@@ -54,14 +56,13 @@ namespace SerialConsole
             }
         }
 
-        public string GetStatus()
+        public string ShowStatus()
         {
             return
                 $"Port-Name '{PortName}', Baud: {BaudRate}, Data: {DataBits}, Stopbits: {StopBits}, Parity: {Parity} {Environment.NewLine}" +
                 $"- Timeout, Read:{ReadTimeout} msec, Write: {WriteTimeout} msec, Buffer in Byte: Read (Default): 4096, Write (Default): 2048 {Environment.NewLine}";
         }
 
-       
 
         public override string ToString()
         {

@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="E:\Projects\NetCore\Here.Common\StromPi3\SerialConsole\publish50.bat" />
+  </Target>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Strompi3Lib\Strompi3Lib.csproj" />
+  </ItemGroup>
+
+</Project>

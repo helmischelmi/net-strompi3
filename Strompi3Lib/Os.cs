@@ -1,13 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Text;
 
-namespace SerialConsole
+namespace Strompi3Lib
 {
     /// <summary>
-    /// supports direct os calls
+    /// enables direct os calls
     /// </summary>
     public static class Os
     {
