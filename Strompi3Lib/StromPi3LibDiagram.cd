@@ -20,7 +20,7 @@
   <Class Name="Strompi3Lib.StromPi3">
     <Position X="2.75" Y="0.5" Width="2.5" />
     <TypeIdentifier>
-      <HashCode>ABAACAgAACAQgAFEACBEKYAAAAAACAACgAAoQIAAAAA=</HashCode>
+      <HashCode>AAAACAgAACAQAABEACBEKYAAAAAACAACgAAoQIAAAAA=</HashCode>
       <FileName>StromPi3.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
@@ -35,7 +35,7 @@
   <Class Name="Strompi3Lib.StromPi3Settings">
     <Position X="5.5" Y="0.5" Width="2.25" />
     <TypeIdentifier>
-      <HashCode>AgAgAAAgAAIAAAAAAgAAIAAAKAggAACExAADAAAgCIA=</HashCode>
+      <HashCode>AiAAAAIAAAIAAAAAAgAAAAJAKgCgAACExAADABAICAA=</HashCode>
       <FileName>StromPi3Settings.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -54,12 +54,12 @@
     </TypeIdentifier>
   </Class>
   <Class Name="Strompi3Lib.BatteryHat">
-    <Position X="5.5" Y="6" Width="2.25" />
+    <Position X="3" Y="6" Width="2.25" />
     <Compartments>
       <Compartment Name="Nested Types" Collapsed="false" />
     </Compartments>
     <TypeIdentifier>
-      <HashCode>AAAABAAAAAAgAAAAAAAAAAAAAAAAAAABAAAAAACAAAA=</HashCode>
+      <HashCode>AAAADAAAAAIAAAAAAAAAAAAAAAAAAAABAAAAAACAAAA=</HashCode>
       <FileName>BatteryHat.cs</FileName>
     </TypeIdentifier>
   </Class>

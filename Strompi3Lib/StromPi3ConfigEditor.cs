@@ -155,6 +155,19 @@ namespace Strompi3Lib
             ups.TransferSetting(ESetConfig.ShutdownBatteryLevel, (int)ups.Settings.BatteryHat.ShutdownLevel);
         }
 
+        public static void EditPowerOnButtonEnabler(StromPi3 ups)
+        {
+            Console.WriteLine($"Power-ON-Button Enabler: ({ups.Settings.StartStopSettings.PowerOnButtonEnable}) ");
+            Console.WriteLine($"Set: 0 = False, 1 = True or ENTER to continue");
+            int powerOnButtonEnable = ReadInt(0, 1);
+
+            Console.WriteLine($"Power-ON-Button-Timer (0..65535 secs): ({ups.Settings.StartStopSettings.PowerOnButtonSeconds}) ");
+            Console.WriteLine($"Set timer seconds and press ENTER to continue");
+            int newPowerOnButtonSeconds = ReadInt(0, 65535);
+
+
+        }
+
 
         public static void EditSeriallessEnable(StromPi3 ups)
         {
@@ -241,5 +254,7 @@ namespace Strompi3Lib
             Console.WriteLine();
             return result;
         }
+
+
     }
 }

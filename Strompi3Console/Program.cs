@@ -241,7 +241,7 @@ namespace Strompi3Console
                             break;
                         case ConsoleKey.D5:
                         case ConsoleKey.NumPad5:
-                            //WaitPollingforPowerFailure();
+                            SetPowerONButtonEnablerAndTimer();
                             break;
                         case ConsoleKey.D6:
                         case ConsoleKey.NumPad6:
@@ -285,6 +285,20 @@ namespace Strompi3Console
                 }
             }
 
+        }
+
+        private static void SetPowerONButtonEnablerAndTimer()
+        { 
+            ShowTitleInteractive("Strompi3", "Set Power-ON-Button Enabler & Timer:");
+            Console.WriteLine();
+            Console.WriteLine();
+
+            using (var ups = new StromPi3(true))
+            {
+                ups.GetSettings();
+                StromPi3ConfigEditor.EditPowerOnButtonEnabler(ups);
+                Console.WriteLine($"Power-ON-Button Enable = {ups.Settings.StartStopSettings.PowerOnButtonEnable}, Timer = {ups.Settings.StartStopSettings.PowerOnButtonSeconds} secs");
+            }
         }
 
         private static void SetPowerSaveMode()
