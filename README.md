@@ -5,7 +5,10 @@ Ports python-scripts 'StromPi3_Status.py', 'RTCSerial.py' and 'serialShutdown.py
 provided by joy-it (https://strompi.joy-it.net/downloads/)
 
 Start: sudo dotnet Strompi3Console.dll
-opens the main menu:
+opens the main menu: https://github.com/helmischelmi/net-strompi3/blob/master/assets/Strompi3Console_MainMenu.png
+
+
+
 
 
 
