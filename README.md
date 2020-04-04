@@ -22,10 +22,11 @@ Output SyncRTC:
 https://github.com/helmischelmi/net-strompi3/blob/master/assets/Strompi3Console_SyncRTC.png
 
 Output (Test) Poll for PowerFailure:
-https://github.com/helmischelmi/net-strompi3/blob/master/rpi_StromPi3_SerialShutdown.png
+Showing 1.Power fails, 2. power is back and 3. power fails und countdown is run until shutdown is initialised.
+https://github.com/helmischelmi/net-strompi3/blob/master/assets/Strompi3Console_TestPollForPowerFailure.png
 
 Attention: Publishxx.bat runs on post-build, to transfer files to the raspi.
 Adopt publishxx.bat according to your needs or use WinSCP to transfer the files.
 
-Roadmap: 
-Potential next steps: 
+Summary: The main purpose is to provide a .net core library to manage (some parts I use) of the Strompi3.
+
