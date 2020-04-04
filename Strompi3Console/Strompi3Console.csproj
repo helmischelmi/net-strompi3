@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="E:\Projects\NetCore\Here.Common\StromPi3\SerialConsole\publish50.bat" />
+    <Exec Command="E:\Projects\NetCore\Here.Common\StromPi3\Strompi3Console\publish50.bat" />
   </Target>
 
   <ItemGroup>

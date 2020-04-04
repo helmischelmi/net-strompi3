@@ -2,13 +2,33 @@
 
 namespace Strompi3Lib
 {
+    /// <summary>
+    /// represents the LiFePO4-Battery-Hat
+    /// </summary>
     public class BatteryHat
     {
+        /// <summary>
+        /// the battery charge level
+        /// </summary>
         public EBatteryLevel Level { get; private set; }
-        public bool IsCharging { get; private set; }
-        public EShutdownLevel ShutdownLevel { get; private set; }
 
-        public void SetBatteryState(int sp3BatLevelShutdown, string sp3BatLevel, string sp3Charging)
+        /// <summary>
+        /// indicates that the battery is currently charging 
+        /// </summary>
+        public bool IsCharging { get; private set; }
+
+        /// <summary>
+        /// a given battery charge level: when reached, a signal is fired to start the shutdown event 
+        /// </summary>
+        public EBatteryShutdownLevel BatteryShutdownLevel { get; private set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sp3BatLevelShutdown"></param>
+        /// <param name="sp3BatLevel"></param>
+        /// <param name="sp3Charging"></param>
+        public void GetBatteryHat(int sp3BatLevelShutdown, string sp3BatLevel, string sp3Charging)
         {
             try
             {
@@ -18,10 +38,7 @@ namespace Strompi3Lib
                 int level = Convert.ToInt32(sp3BatLevel);
                 if (level >= 0 && level <= 4) Level = (EBatteryLevel)level;
 
-                ShutdownLevel = EShutdownLevel.nothing;
-                var levelShutdown = sp3BatLevelShutdown;
-
-                if (levelShutdown >= 0 && levelShutdown <= 4) ShutdownLevel = (EShutdownLevel)levelShutdown;
+                SetShutdownLevel(sp3BatLevelShutdown);
             }
             catch (Exception e)
             {
@@ -29,15 +46,18 @@ namespace Strompi3Lib
             }
         }
 
-        
-        public void SetBatteryShutdownLevel(int sp3BatLevelShutdown)
+        /// <summary>
+        /// sets the given level, if input ist vald, else EShutdownLevel.nothing 
+        /// </summary>
+        /// <param name="levelShutdown"></param>
+        public void SetShutdownLevel(int levelShutdown)
         {
             try
             {
-                ShutdownLevel = EShutdownLevel.nothing;
-                var levelShutdown = sp3BatLevelShutdown;
+                BatteryShutdownLevel = EBatteryShutdownLevel.nothing;
 
-                if (levelShutdown >= 0 && levelShutdown <= 4) ShutdownLevel = (EShutdownLevel)levelShutdown;
+                if (levelShutdown >= 0 && levelShutdown <= 4) 
+                    BatteryShutdownLevel = (EBatteryShutdownLevel)levelShutdown;
             }
             catch (Exception e)
             {

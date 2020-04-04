@@ -8,15 +8,15 @@ namespace Strompi3Lib
         nothing = 0,
 
         [Description("[10%]")]
-        tenPercent = 1,
+        TenPercent = 1,
 
         [Description(" [25%]")]
-        twentyfivePercent = 2,
+        TwentyfivePercent = 2,
 
         [Description("[50%]")]
-        fiftyPercent = 3,
+        FiftyPercent = 3,
 
         [Description("[100%]")]
-        hundredPercent = 4
+        HundredPercent = 4
     }
 }

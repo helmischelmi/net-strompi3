@@ -1,122 +1,147 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1">
-  <Comment CommentText="StromPi3 - Library">
-    <Position X="0.5" Y="12.124" Height="0.323" Width="3.243" />
+  <Comment CommentText="StromPi3 - Library  04.04.2020">
+    <Position X="10.557" Y="9.801" Height="0.323" Width="2.113" />
   </Comment>
-  <Class Name="Strompi3Lib.SerialPortParameter">
-    <Position X="0.5" Y="0.5" Width="2" />
+  <Class Name="Strompi3Lib.SerialPortConfigurator">
+    <Position X="0.5" Y="0.5" Width="1.75" />
+    <Compartments>
+      <Compartment Name="Properties" Collapsed="true" />
+    </Compartments>
     <TypeIdentifier>
-      <HashCode>AIAAAAAAAAAAQAAEIAAAAAgAAAAQAAAAAAAEBAAUAAA=</HashCode>
-      <FileName>SerialPortParameter.cs</FileName>
+      <HashCode>AIABAAAAAAAAQAAEAAAAAAgAAAAQAAAAAAAEAAAUAAA=</HashCode>
+      <FileName>SerialPortConfigurator.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Strompi3Lib.SerialPortExtension">
-    <Position X="0.5" Y="4" Width="1.75" />
+    <Position X="11" Y="7" Width="1.75" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAABAAAA=</HashCode>
+      <HashCode>AAAAAAABAAAAAAAAAAAAAAAABAIAAAAAACAAAAICAAA=</HashCode>
       <FileName>SerialPortExtension.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Strompi3Lib.StromPi3">
-    <Position X="2.75" Y="0.5" Width="2.5" />
+    <Position X="2.5" Y="0.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAACAgAACAQAABEACBEKYAAAAAACAACgAAoQIAAAAA=</HashCode>
+      <HashCode>AAAAAAAAACAQAAAEACCAAYAACAAAAAAAgAAAAAAAAAA=</HashCode>
       <FileName>StromPi3.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
   </Class>
-  <Class Name="Strompi3Lib.VoltageMeter">
-    <Position X="8" Y="3.5" Width="2.25" />
+  <Class Name="Strompi3Lib.VoltageMeter" Collapsed="true">
+    <Position X="0.5" Y="4" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAEAAAgAAAQAAAAAIAQAAAAAIAAwAAAAAABA=</HashCode>
+      <HashCode>AAACAAAAAEAAAgAAAQAAAAAIAQAAAAAIAAQAAAAAABA=</HashCode>
       <FileName>VoltageMeter.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Strompi3Lib.StromPi3Settings">
-    <Position X="5.5" Y="0.5" Width="2.25" />
+    <Position X="6.25" Y="0.5" Width="2" />
     <TypeIdentifier>
-      <HashCode>AiAAAAIAAAIAAAAAAgAAAAJAKgCgAACExAADABAICAA=</HashCode>
+      <HashCode>AiAAAAIAAAIAAAAEAgAAAAJAKgCgAACExAADABAICAA=</HashCode>
       <FileName>StromPi3Settings.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Strompi3Lib.StartStopSettings">
-    <Position X="8" Y="0.5" Width="2.25" />
+    <Position X="8.5" Y="0.5" Width="2.25" />
     <TypeIdentifier>
-      <HashCode>AQAAAgAAAAAAAAAAQAAAAAAABAsAAAAAAAAAAAAgAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAAAAAAQAAAAAAABAsAAAAAAAAAAABgAAA=</HashCode>
       <FileName>StartStopSettings.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="Strompi3Lib.ConverterHelper">
-    <Position X="0.5" Y="5.5" Width="2.25" />
+  <Class Name="Strompi3Lib.ConverterHelper" Collapsed="true">
+    <Position X="0.5" Y="2.5" Width="1.75" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAQAAAEAAAAAAAAAAAAAAIAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAAAAAAAAQQAAEAAAAAAgAAAAAAAIAAAAA=</HashCode>
       <FileName>ConverterHelper.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="Strompi3Lib.BatteryHat">
-    <Position X="3" Y="6" Width="2.25" />
+  <Class Name="Strompi3Lib.BatteryHat" Collapsed="true">
+    <Position X="0.5" Y="3.25" Width="1.5" />
     <Compartments>
+      <Compartment Name="Properties" Collapsed="true" />
       <Compartment Name="Nested Types" Collapsed="false" />
     </Compartments>
     <TypeIdentifier>
-      <HashCode>AAAADAAAAAIAAAAAAAAAAAAAAAAAAAABAAAAAACAAAA=</HashCode>
+      <HashCode>AAAABAAAAAAAIAAAAAAAAAAAIgAAAAABAAAAAAAAAAA=</HashCode>
       <FileName>BatteryHat.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Strompi3Lib.AlarmSettings">
-    <Position X="10.5" Y="0.5" Width="2.25" />
+    <Position X="8.5" Y="3.25" Width="2.25" />
     <TypeIdentifier>
-      <HashCode>ARAAIAAAMIAAAoAAAAAAAAAQAAACADIEASABAAAQQAA=</HashCode>
+      <HashCode>ARAAIAAIEIAIAgEAAAAAQAAQAAAQEAACACADAAAQQCA=</HashCode>
       <FileName>AlarmSettings.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Enum Name="Strompi3Lib.EWeekday">
-    <Position X="9.25" Y="8.25" Width="1.5" />
+  <Class Name="Strompi3Lib.StromPi3ConfigEditor">
+    <Position X="4.25" Y="0.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>gBAAAAAQAAAAAAAAAAAAAAAEgGACAAAAEAAAAAACAAQ=</HashCode>
+      <FileName>StromPi3ConfigEditor.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Strompi3Lib.UpsMonitor">
+    <Position X="4.25" Y="4" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAECEAAAAAAAAAAAAAYAEAACACACAAAAAAgRAAAAAA=</HashCode>
+      <FileName>UpsMonitor.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Enum Name="Strompi3Lib.EWeekday" Collapsed="true">
+    <Position X="2.5" Y="7.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAQAAIgACAAAAAAAAAAACAAIACAIAAAAAAAAAAAAAA=</HashCode>
       <FileName>EWeekday.cs</FileName>
     </TypeIdentifier>
   </Enum>
   <Enum Name="Strompi3Lib.EOutputStatus">
-    <Position X="5.75" Y="8.25" Width="1.5" />
+    <Position X="0.5" Y="8.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAgAAQAAAAAABAAAAAAAgAAAAAAAAAIAAAAAAA=</HashCode>
       <FileName>EOutputStatus.cs</FileName>
     </TypeIdentifier>
   </Enum>
   <Enum Name="Strompi3Lib.EInputPriority">
-    <Position X="4" Y="8.25" Width="1.5" />
+    <Position X="2.5" Y="3.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAEAAAgABAAAAAEIAAAAAAAAAAAAAAAQAAAAAAAAEA=</HashCode>
       <FileName>EInputPriority.cs</FileName>
     </TypeIdentifier>
   </Enum>
   <Enum Name="Strompi3Lib.EAlarmMode">
-    <Position X="0.5" Y="8.25" Width="1.5" />
+    <Position X="2.5" Y="6" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAgAAAAABABAAABAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAgAAAAABABAAABAAAAAAAAAAAAAAAAAQAAAAA=</HashCode>
       <FileName>EAlarmMode.cs</FileName>
     </TypeIdentifier>
   </Enum>
-  <Enum Name="Strompi3Lib.EShutdownLevel">
-    <Position X="7.5" Y="8.25" Width="1.5" />
+  <Enum Name="Strompi3Lib.EBatteryShutdownLevel">
+    <Position X="0.5" Y="6.75" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAgAAAAAAAQAACAAAQAAAAAAAAAAAQAAAAAAAA=</HashCode>
-      <FileName>EShutdownLevel.cs</FileName>
+      <HashCode>AAAAAAAkABAAAAAAAACAAAAAAAAEAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>EBatteryShutdownLevel.cs</FileName>
     </TypeIdentifier>
   </Enum>
   <Enum Name="Strompi3Lib.EBatteryLevel">
-    <Position X="2.25" Y="8.25" Width="1.5" />
+    <Position X="0.5" Y="5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAEQAgQAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAA=</HashCode>
+      <HashCode>AABAAAAkABEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>EBatteryLevel.cs</FileName>
     </TypeIdentifier>
   </Enum>
-  <Enum Name="Strompi3Lib.ESetConfig">
-    <Position X="11" Y="5.75" Width="1.75" />
+  <Enum Name="Strompi3Lib.EConfigElement">
+    <Position X="11" Y="0.5" Width="1.75" />
     <TypeIdentifier>
-      <HashCode>gQEAAgQAAoAQAAAAIQQAbQAABAgA0BAAQQCQQAAgAAA=</HashCode>
-      <FileName>ESetConfig.cs</FileName>
+      <HashCode>gREAAgAAAoAQAAAAIQQAbQAABAgA0BAAQQCQQAAgAAA=</HashCode>
+      <FileName>EConfigElement.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="Strompi3Lib.EUpsState">
+    <Position X="2.25" Y="8.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>ACAAAAAAAAEAAAAAQAAAAAAEAAAAAAAAACAAAAAAQAA=</HashCode>
+      <FileName>EUpsState.cs</FileName>
     </TypeIdentifier>
   </Enum>
   <Font Name="Segoe UI" Size="9" />

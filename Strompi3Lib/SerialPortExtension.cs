@@ -1,14 +1,16 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO.Ports;
 using System.Text;
+using System.Threading;
 
 namespace Strompi3Lib
 {
     public static class SerialPortExtension
     {
+        private const int Shortbreak = 100; // millisecs
+        private const int Longbreak = 200; // millisecs
 
-        public static SerialPort Create(this SerialPort port, SerialPortParameter param)
+        public static SerialPort GetInstance(this SerialPort port, SerialPortConfigurator param)
         {
             SerialPort result;
             try
@@ -29,7 +31,117 @@ namespace Strompi3Lib
             }
         }
 
-        public static string ShowStatusExtended(this SerialPort port)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="port"></param>
+        /// <param name="configElement"></param>
+        /// <param name="value"></param>
+        public static void SendConfigElement(this SerialPort port, EConfigElement configElement, int value)
+        {
+            bool isPortOpen = port.IsOpen;
+            if (!isPortOpen) port.Open();
+
+            port.Write($"set-config {(int)configElement} {value}");
+            Thread.Sleep(Shortbreak);
+            port.Write("\r");
+            Thread.Sleep(Longbreak);
+
+            if (!isPortOpen) port.Close();
+
+            Console.WriteLine($"serial Write {(int)configElement} {value} transfer successfull..");
+        }
+
+
+        /// <summary>
+        /// Reads all status-related characteristics of the Strompi3.
+        /// <para>
+        /// <remarks>Requires serial-mode</remarks></para>
+        /// </summary>
+        public static string ReceiveConfiguration(this SerialPort port, StromPi3Settings settings, bool bSilent = true)
+        {
+            if (!Os.ShowAvailableSerialPorts("tty", true)) return String.Empty;
+
+            bool isPortOpen = port.IsOpen;
+            if (!isPortOpen) port.Open();
+
+            port.Write("quit");
+            port.Write("\r"); // \x0d = {13} Carriage Return
+            port.Write("status-rpi");
+            port.Write("\r"); // \x0d = {13} Carriage Return
+
+            string sp3Time = port.ReadLine();
+            string sp3Date = port.ReadLine();
+
+            settings.SetRTCDateTime(sp3Time, sp3Date);
+
+            string sp3_weekday = port.ReadLine();  // not used
+            string sp3_modus = port.ReadLine();
+            settings.SetInputPriorityMode(sp3_modus);
+
+            settings.AlarmSettings.GetAlarmEnabled(port.ReadLine());
+            settings.AlarmSettings.GetAlarmMode(port.ReadLine());
+
+            string sp3AlarmHour = port.ReadLine();
+            string sp3AlarmMin = port.ReadLine();
+            string sp3AlarmDay = port.ReadLine();
+            string sp3AlarmMonth = port.ReadLine();
+            string sp3AlarmWeekday = port.ReadLine();
+            settings.AlarmSettings.GetAlarmDateTime(sp3AlarmHour, sp3AlarmMin, sp3AlarmDay, sp3AlarmMonth, sp3AlarmWeekday);
+
+            settings.AlarmSettings.GetAlarmPowerOffEnabled(port.ReadLine());
+
+            string alarmPowerOffHours = port.ReadLine();
+            string alarmPowerOffMinutes = port.ReadLine();
+            settings.AlarmSettings.GetAlarmPowerOffTimePeriod(alarmPowerOffHours, alarmPowerOffMinutes);
+
+            string sp3ShutdownEnable = port.ReadLine();
+            string sp3ShutdownSeconds = port.ReadLine();
+            settings.SetShutDown(sp3ShutdownEnable, Convert.ToInt32(sp3ShutdownSeconds), (int)EBatteryLevel.nothing);
+
+            settings.SetPowerFailWarningEnable(port.ReadLine());
+            settings.SetSerialLessEnable(port.ReadLine());
+
+            string sp3IntervalAlarm = port.ReadLine();
+            string sp3IntervallAlarmOnTimeMinutes = port.ReadLine();
+            string sp3IntervallAlarmOffTimeMinutes = port.ReadLine();
+            settings.AlarmSettings.GetAlarmIntervall(sp3IntervalAlarm, sp3IntervallAlarmOnTimeMinutes, sp3IntervallAlarmOffTimeMinutes);
+
+            string sp3BatLevelShutdown = port.ReadLine();
+            string sp3BatLevel = port.ReadLine();
+            string sp3Charging = port.ReadLine();
+            settings.BatteryHat.GetBatteryHat(Convert.ToInt32(sp3BatLevelShutdown), sp3BatLevel, sp3Charging);
+
+            string sp3PowerOnButtonEnable = port.ReadLine();
+            string sp3PowerOnButtonTime = port.ReadLine();
+            string sp3PowersaveEnable = port.ReadLine();
+            string sp3PoweroffMode = port.ReadLine();
+            string poweroffTimeEnableMode = port.ReadLine();
+            settings.StartStopSettings.GetStartStopSettings(sp3PowerOnButtonEnable, sp3PowerOnButtonTime, sp3PowersaveEnable, sp3PoweroffMode, poweroffTimeEnableMode);
+
+            string wakeupTimerMinutes = port.ReadLine();
+            string sp3WakeupweekendEnable = port.ReadLine();
+            settings.AlarmSettings.GetAlarmWakeupTimerAndWeekend(wakeupTimerMinutes, sp3WakeupweekendEnable);
+
+            string sp3AdcWide = port.ReadLine();
+            string sp3AdcBat = port.ReadLine();
+            string sp3AdcUsb = port.ReadLine();
+            string outputVolt = port.ReadLine();
+            settings.VoltageMeter.GetVoltageMeter(sp3AdcWide, sp3AdcBat, sp3AdcUsb, outputVolt);
+
+            settings.SetOutputStatus(port.ReadLine());
+            settings.SetPowerFailureCounter(port.ReadLine());
+            settings.SetFirmwareVersion(port.ReadLine());
+
+            if (!isPortOpen) port.Close();
+
+            return settings.ToString();
+        }
+
+
+
+
+        public static string ShowConfigExtended(this SerialPort port)
         {
             var strEol = String.Empty;
             foreach (byte b in Encoding.UTF8.GetBytes(port.NewLine.ToCharArray()))

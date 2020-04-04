@@ -14,6 +14,9 @@ namespace Strompi3Lib
         DateAlarm = 2,
 
         [Description("Weekday-Alarm")]
-        WeekdayAlarm = 3
+        WeekdayAlarm = 3,
+
+        [Description("Wakeup-Timer")]
+        WakeupTimer = 4
     }
 }

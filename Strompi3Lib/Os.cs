@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
+using System.IO.Ports;
 
 namespace Strompi3Lib
 {
@@ -9,7 +10,7 @@ namespace Strompi3Lib
     /// </summary>
     public static class Os
     {
-                /// <summary>
+        /// <summary>
         /// prepares os call setting the system date, see https://linux.die.net/man/1/date
         /// </summary>
         /// <param name="dateTime"></param>
@@ -21,9 +22,33 @@ namespace Strompi3Lib
             string arguments = $" -s {dateTime.Year}-{dateTime.Month}-{dateTime.Day}" +
                                $" {dateTime.Hour}:{dateTime.Minute}:{dateTime.Second}";
 
-            OsCall(exe,arguments);
+            OsCall(exe, arguments);
         }
 
+        /// <summary>
+        /// Shows list of serial port names.
+        /// </summary>
+        /// <returns>TRUE, if serial port is available</returns>
+        public static bool ShowAvailableSerialPorts(string strRequiredPorts, bool bSilent = false)
+        {
+            string[] ports = SerialPort.GetPortNames();
+            if (!bSilent) Console.WriteLine("The following serial ports were found:");
+
+
+            // Display each port name to the console.
+            foreach (string port in ports)
+            {
+                if (!bSilent) Console.WriteLine($"Serial name: {port}");
+                var isTTY = port.Contains(strRequiredPorts);
+                if (isTTY) continue;
+
+                Console.WriteLine($"No {strRequiredPorts}.. serial port!");
+                return false;
+            }
+
+            if (!bSilent) Console.WriteLine("Yes, we have the embedded serial port available.");
+            return true;
+        }
 
         /// <summary>
         /// wraps os call 'sudo shutdown -h now'
@@ -32,7 +57,7 @@ namespace Strompi3Lib
         {
             string exe = $"shutdown";
             string arguments = $"-h now";
-            OsCall(exe,arguments);
+            OsCall(exe, arguments);
         }
 
 
@@ -78,7 +103,7 @@ namespace Strompi3Lib
                 Console.WriteLine($"exit-code: {result}, error: {error}");
             }
 
-            
+
         }
     }
 }

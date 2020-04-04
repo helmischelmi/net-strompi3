@@ -2,19 +2,19 @@
 
 namespace Strompi3Lib
 {
-    public enum EShutdownLevel
+    public enum EBatteryShutdownLevel
     {
         [Description("[Disabled]")]
         Disabled = 0,
 
         [Description("[10%]")]
-        tenPercent = 1,
+        TenPercent = 1,
 
         [Description("[25%]")]
-        quarterLeft = 2,
+        QuarterLeft = 2,
 
         [Description("[50%]")]
-        halfEmpty = 3,
+        HalfEmpty = 3,
 
         [Description("[nothing]")]
         nothing = 4

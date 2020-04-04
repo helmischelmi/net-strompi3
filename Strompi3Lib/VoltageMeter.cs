@@ -13,7 +13,7 @@ namespace Strompi3Lib
         public double BatteryVolt { get; private set; }
         public double OutputVolt { get; private set; }
 
-        public void GetVoltage(string sp3AdcWide, string sp3AdcBat, string sp3AdcUsb, string outputVolt)
+        public void GetVoltageMeter(string sp3AdcWide, string sp3AdcBat, string sp3AdcUsb, string outputVolt)
         {
             try
             {

@@ -2,7 +2,7 @@
 
 namespace Strompi3Lib
 {
-    public enum ESetConfig
+    public enum EConfigElement
     {
         [Description("[ModusReset]")]
         ModusReset = 0,
@@ -87,7 +87,7 @@ namespace Strompi3Lib
         PowerOffMode = 25,
 
         [Description("PowerOffTime")]
-        PowerOffTime = 27,
+        PowerOffTimer = 27,
 
         [Description("WakeupWeekendEnable")]
         WakeupWeekendEnable = 28,

@@ -8,7 +8,7 @@ namespace Strompi3Lib
     /// <summary>
     /// parameters for serial communication
     /// </summary>
-    public class SerialPortParameter
+    public class SerialPortConfigurator
     {
         public string PortName { get; private set; }
         public int BaudRate { get; private set; }
@@ -23,7 +23,7 @@ namespace Strompi3Lib
         public int WriteTimeout { get; private set; }
 
 
-        public SerialPortParameter(string portName, int baudRate, Parity parity, int dataBits, StopBits stopBits, int readTimeout, int writeTimeout)
+        public SerialPortConfigurator(string portName, int baudRate, Parity parity, int dataBits, StopBits stopBits, int readTimeout, int writeTimeout)
         {
             PortName = portName;
             BaudRate = baudRate;
@@ -35,12 +35,11 @@ namespace Strompi3Lib
             WriteTimeout = writeTimeout;
         }
 
-        public SerialPort InitializeSerialPort()
+        public SerialPort GetPortInstance()
         {
-            SerialPort result;
             try
             {
-                result = new SerialPort(PortName, BaudRate, Parity, DataBits, StopBits)
+                var result = new SerialPort(PortName, BaudRate, Parity, DataBits, StopBits)
                 {
                     ReadTimeout = ReadTimeout,
                     WriteTimeout = WriteTimeout
@@ -51,16 +50,8 @@ namespace Strompi3Lib
             catch (Exception e)
             {
                 Console.WriteLine("Create Serial Interface failed: ", e);
-                this.ToString();
                 throw;
             }
-        }
-
-        public string ShowStatus()
-        {
-            return
-                $"Port-Name '{PortName}', Baud: {BaudRate}, Data: {DataBits}, Stopbits: {StopBits}, Parity: {Parity} {Environment.NewLine}" +
-                $"- Timeout, Read:{ReadTimeout} msec, Write: {WriteTimeout} msec, Buffer in Byte: Read (Default): 4096, Write (Default): 2048 {Environment.NewLine}";
         }
 
 
