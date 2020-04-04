@@ -4,6 +4,11 @@ A very basic net-project of StromPi3 (Firmware-Version 1.72 required) (from joy-
 Ports python-scripts 'StromPi3_Status.py', 'RTCSerial.py' and 'serialShutdown.py'
 provided by joy-it (https://strompi.joy-it.net/downloads/)
 
+Start: sudo dotnet Strompi3Console.dll
+opens the main menu:
+
+
+
 Output ReadStatus:
 https://github.com/helmischelmi/net-strompi3/blob/master/rpi_StromPi3_Status.png
 
