@@ -13,9 +13,10 @@ https://github.com/helmischelmi/net-strompi3/blob/master/assets/Strompi3Console_
 Here, the first No 1 and 2 work, rest (3-0) is experimental
 
 Output ReadPorts:
-https://github.com/helmischelmi/net-strompi3/blob/master/rpi_StromPi3_Status.png
+https://github.com/helmischelmi/net-strompi3/blob/master/assets/Strompi3Console_ReadPorts.png
 
 Output ReadConfiguration:
+
 
 Output SyncRTC:
 https://github.com/helmischelmi/net-strompi3/blob/master/rpi_StromPi3_SyncRTC.png
