@@ -29,4 +29,6 @@ Attention: Publishxx.bat runs on post-build, to transfer files to the raspi.
 Adopt publishxx.bat according to your needs or use WinSCP to transfer the files.
 
 Summary: The main purpose is to provide a .net core library to manage (some parts I use) of the Strompi3.
+See https://github.com/helmischelmi/net-strompi3/blob/master/assets/StromPi3LibDiagram.png
+
 
