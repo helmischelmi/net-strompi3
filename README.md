@@ -6,19 +6,21 @@ provided by joy-it (https://strompi.joy-it.net/downloads/)
 
 Start: sudo dotnet Strompi3Console.dll
 opens the main menu: https://github.com/helmischelmi/net-strompi3/blob/master/assets/Strompi3Console_MainMenu.png
-Item 1 -5 and 0 are working. Item 6 isn't implemented yet
+No. 1 - 5 and 0 are working. Item 6 isn't implemented yet
 
-Item 3 open the only submenu: 
+No. 3 opens the configuration menu (only submenu): 
+https://github.com/helmischelmi/net-strompi3/blob/master/assets/Strompi3Console_ConfigMenu.png
+Here, the first No 1 and 2 work, rest (3-0) is experimental
 
-
-
-Output ReadStatus:
+Output ReadPorts:
 https://github.com/helmischelmi/net-strompi3/blob/master/rpi_StromPi3_Status.png
+
+Output ReadConfiguration:
 
 Output SyncRTC:
 https://github.com/helmischelmi/net-strompi3/blob/master/rpi_StromPi3_SyncRTC.png
 
-Output serialShutdown:
+Output (Test) Poll for PowerFailure:
 https://github.com/helmischelmi/net-strompi3/blob/master/rpi_StromPi3_SerialShutdown.png
 
 Attention: Publishxx.bat runs on post-build, to transfer files to the raspi.
