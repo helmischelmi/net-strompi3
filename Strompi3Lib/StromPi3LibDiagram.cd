@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1">
   <Comment CommentText="StromPi3 - Library  04.04.2020">
-    <Position X="10.557" Y="9.801" Height="0.323" Width="2.113" />
+    <Position X="10.763" Y="9.88" Height="0.323" Width="1.97" />
   </Comment>
   <Class Name="Strompi3Lib.SerialPortConfigurator">
     <Position X="0.5" Y="0.5" Width="1.75" />
@@ -28,8 +28,8 @@
     </TypeIdentifier>
     <Lollipop Position="0.2" />
   </Class>
-  <Class Name="Strompi3Lib.VoltageMeter" Collapsed="true">
-    <Position X="0.5" Y="4" Width="1.5" />
+  <Class Name="Strompi3Lib.VoltageMeter">
+    <Position X="6.25" Y="6.5" Width="2" />
     <TypeIdentifier>
       <HashCode>AAACAAAAAEAAAgAAAQAAAAAIAQAAAAAIAAQAAAAAABA=</HashCode>
       <FileName>VoltageMeter.cs</FileName>
@@ -49,15 +49,15 @@
       <FileName>StartStopSettings.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="Strompi3Lib.ConverterHelper" Collapsed="true">
+  <Class Name="Strompi3Lib.ConverterHelper">
     <Position X="0.5" Y="2.5" Width="1.75" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAQQAAEAAAAAAgAAAAAAAIAAAAA=</HashCode>
       <FileName>ConverterHelper.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="Strompi3Lib.BatteryHat" Collapsed="true">
-    <Position X="0.5" Y="3.25" Width="1.5" />
+  <Class Name="Strompi3Lib.BatteryHat">
+    <Position X="8.5" Y="8.75" Width="2" />
     <Compartments>
       <Compartment Name="Properties" Collapsed="true" />
       <Compartment Name="Nested Types" Collapsed="false" />
@@ -84,7 +84,7 @@
   <Class Name="Strompi3Lib.UpsMonitor">
     <Position X="4.25" Y="4" Width="1.75" />
     <TypeIdentifier>
-      <HashCode>AAAECEAAAAAAAAAAAAAYAEAACACACAAAAAAgRAAAAAA=</HashCode>
+      <HashCode>AAAFCAAAAAAAAAAAIAAYAEAACACACAAAAAAgRAAAAAA=</HashCode>
       <FileName>UpsMonitor.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -96,7 +96,7 @@
     </TypeIdentifier>
   </Enum>
   <Enum Name="Strompi3Lib.EOutputStatus">
-    <Position X="0.5" Y="8.5" Width="1.5" />
+    <Position X="0.5" Y="8.25" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAgAAQAAAAAABAAAAAAAgAAAAAAAAAIAAAAAAA=</HashCode>
       <FileName>EOutputStatus.cs</FileName>
@@ -117,14 +117,14 @@
     </TypeIdentifier>
   </Enum>
   <Enum Name="Strompi3Lib.EBatteryShutdownLevel">
-    <Position X="0.5" Y="6.75" Width="1.5" />
+    <Position X="0.5" Y="6.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAkABAAAAAAAACAAAAAAAAEAAAAAAAAAAAAAAA=</HashCode>
       <FileName>EBatteryShutdownLevel.cs</FileName>
     </TypeIdentifier>
   </Enum>
   <Enum Name="Strompi3Lib.EBatteryLevel">
-    <Position X="0.5" Y="5" Width="1.5" />
+    <Position X="0.5" Y="4.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AABAAAAkABEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>EBatteryLevel.cs</FileName>
