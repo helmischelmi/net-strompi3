@@ -6,9 +6,9 @@ provided by joy-it (https://strompi.joy-it.net/downloads/)
 
 Start: sudo dotnet Strompi3Console.dll
 opens the main menu: https://github.com/helmischelmi/net-strompi3/blob/master/assets/Strompi3Console_MainMenu.png
+Item 1 -5 and 0 are working. Item 6 isn't implemented yet
 
-
-
+Item 3 open the only submenu: 
 
 
 
