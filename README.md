@@ -19,7 +19,7 @@ Output ReadConfiguration:
 https://github.com/helmischelmi/net-strompi3/blob/master/assets/Strompi3Console_ReadConfiguration.png
 
 Output SyncRTC:
-https://github.com/helmischelmi/net-strompi3/blob/master/rpi_StromPi3_SyncRTC.png
+https://github.com/helmischelmi/net-strompi3/blob/master/assets/Strompi3Console_SyncRTC.png
 
 Output (Test) Poll for PowerFailure:
 https://github.com/helmischelmi/net-strompi3/blob/master/rpi_StromPi3_SerialShutdown.png
