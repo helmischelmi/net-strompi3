@@ -165,6 +165,9 @@ namespace Strompi3Console
             int newShutdownSeconds = ups.Settings.ShutdownSeconds;
             if (shutdownEnable)
             {
+                Console.WriteLine("Values above 255 won't work with firmware 1.72, see FAQ https://strompi.joy-it.net/questions/question/rpi4-strompi3-shutdown-funktioniert-nicht-korrekt-strompi-schaltet-zu-frueh-ab/page/3/");
+                // Der Bug war, dass der Wert des Shutdowntimers in einer 16 bit Variable abgelegt wurde, aber in der weiteren Verarbeitung noch eine 8 bit Variable war.
+                // Dies führte dazu, dass Werte über 255 Sekunden nicht korrekt funktionierten.
                 Console.WriteLine($"Shutdown-Timer (0..65535 secs): ({ups.Settings.ShutdownSeconds}) ");
                 newShutdownSeconds = ConverterHelper.ReadInt(0, 65535, "timer (0..65535 secs)");
             }
