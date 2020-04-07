@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Threading;
 using Strompi3Lib;
 
 namespace Strompi3Console
@@ -60,13 +61,23 @@ namespace Strompi3Console
                         case ConsoleKey.D1:
                         case ConsoleKey.NumPad1:
                             ShowTitleInteractive(SubTitle, "Read available ports:");
-                            Strompi3API.ReadPorts();
+                            Console.WriteLine();
+                            Console.WriteLine();
+                            Os.ShowAvailableSerialPorts("tty");
                             break;
+
                         case ConsoleKey.D2:
                         case ConsoleKey.NumPad2:
                             ShowTitleInteractive(SubTitle, "Get Configuration:");
-                            Strompi3API.GetConfiguration();
+                            Console.WriteLine();
+                            Console.WriteLine();
+                            ApiHelper.InitializeClient();
+                            using (var ups = ApiHelper.Strompi3Client)
+                            {
+                                Console.WriteLine(ups.Settings);
+                            }
                             break;
+
                         case ConsoleKey.D3:
                         case ConsoleKey.NumPad3:
                             ShowConfigurationSubMenu();
@@ -74,23 +85,47 @@ namespace Strompi3Console
                         case ConsoleKey.D4:
                         case ConsoleKey.NumPad4:
                             ShowTitleInteractive(SubTitle, "Synchronize Date and Time:");
-                            Strompi3API.SyncRTCTime();
+                            Console.WriteLine();
+                            Console.WriteLine();
+                            ApiHelper.InitializeClient();
+                            using (var ups = ApiHelper.Strompi3Client)
+                            {
+                                ups.SyncRTC();
+                            }
                             break;
+
                         case ConsoleKey.D5:
                         case ConsoleKey.NumPad5:
                             ShowTitleInteractive(SubTitle, "Wait - Polling for Power Failure:");
-                            Strompi3API.WaitPollingforPowerFailure();
+                            Console.WriteLine();
+                            Console.WriteLine();
+                            ApiHelper.InitializeClient();
+                            using (var ups = ApiHelper.Strompi3Client)
+                            {
+                                ups.Monitor.Poll();
+                            }
                             break;
+
                         case ConsoleKey.D6:
                         case ConsoleKey.NumPad6:
                             ShowTitleInteractive(SubTitle, "WaitIRQforPowerFailure:");
-                            Strompi3API.WaitIRQforPowerFailure();
+                            Console.WriteLine();
+                            Console.WriteLine();
+                            ApiHelper.InitializeClient();
+                            using (var ups = ApiHelper.Strompi3Client)
+                            {
+                                Console.WriteLine("TODO: not implemented");
+                                //ups.Monitor.PowerFailureByIRQ();
+                            }
                             break;
 
                         case ConsoleKey.D0:
                         case ConsoleKey.NumPad0:
                             ShowTitleInteractive(SubTitle, "Raspberry Pi: running shutdown");
-                            Strompi3API.ShutDownRaspi();
+                            Console.WriteLine();
+                            Console.WriteLine();
+                            Thread.Sleep(2000);
+                            Os.ShutDown();
                             break;
 
                         case ConsoleKey.Escape:
@@ -228,43 +263,51 @@ namespace Strompi3Console
                         case ConsoleKey.D1:
                         case ConsoleKey.NumPad1:
                             ShowTitleInteractive(SubTitle, "Modify Configuration (all-in-one):");
-                            configuredUps = Strompi3API.CompleteConfiguration();
-                           
+                            Console.WriteLine();
+                            Console.WriteLine();
+                            ApiHelper.EditCompleteConfiguration();
                             break;
+
                         case ConsoleKey.D2:
                         case ConsoleKey.NumPad2:
                             ShowTitleInteractive(SubTitle, "Transfer Configuration to Strompi3:");
-                            if (configuredUps != null)
-                            {
-                               Strompi3API.TransferConfiguration(configuredUps);  
-                            }
-                           
-                            
+                            Console.WriteLine();
+                            Console.WriteLine();
+                            ApiHelper.SendConfiguration(configuredUps);
                             break;
+
                         case ConsoleKey.D3:
                         case ConsoleKey.NumPad3:
                             ShowTitleInteractive(SubTitle, "Set Power Priority:");
-                            Strompi3API.SetPowerPriority();
+                            Console.WriteLine();
+                            Console.WriteLine();
+                            ApiHelper.EditInputPriorityMode();
                             break;
 
                         case ConsoleKey.D4:
                         case ConsoleKey.NumPad4:
                             ShowTitleInteractive(SubTitle, "Set Shutdown-Enable, -Timer and Shutdown-battery-level:");
-                            Strompi3API.SetShutdownSettings();
+                            Console.WriteLine();
+                            Console.WriteLine();
+                            ApiHelper.EditShutdownMode();
                             break;
 
                         case ConsoleKey.D5:
                         case ConsoleKey.NumPad5:
                             ShowTitleInteractive(SubTitle, "Set Power Save Mode:");
-                            Strompi3API.SetPowerSaveMode();
-                           
+                            Console.WriteLine();
+                            Console.WriteLine();
+                            ApiHelper.EditPowerSaveMode();
                             break;
+
                         case ConsoleKey.D6:
                         case ConsoleKey.NumPad6:
                             ShowTitleInteractive(SubTitle, "Alarm-Enable:");
-                            Strompi3API.SetAlarmMode();
-                           
+                            Console.WriteLine();
+                            Console.WriteLine();
+                            ApiHelper.EditAlarmConfiguration();
                             break;
+
                         case ConsoleKey.D7:
                         case ConsoleKey.NumPad7:
                             ShowTitleInteractive(SubTitle, "TBD:");
@@ -274,18 +317,21 @@ namespace Strompi3Console
                         case ConsoleKey.D8:
                         case ConsoleKey.NumPad8:
                             ShowTitleInteractive(SubTitle, " TBD:");
-                            //SetSerialLessMode();
                             break;
                         case ConsoleKey.D9:
                         case ConsoleKey.NumPad9:
                             ShowTitleInteractive(SubTitle, "MOD: Set Power-ON-Button-Enable and -Timer:");
-                            Strompi3API.SetPowerONButtonEnablerAndTimer();
+                            Console.WriteLine();
+                            Console.WriteLine();
+                            ApiHelper.EditPowerOnButton();
                             break;
 
                         case ConsoleKey.D0:
                         case ConsoleKey.NumPad0:
                             ShowTitleInteractive(SubTitle, "MOD: Set Serialless-Mode ON/OFF:");
-                            Strompi3API.SetSerialLess();
+                            Console.WriteLine();
+                            Console.WriteLine();
+                            ApiHelper.EditSerialless();
                             break;
 
                         case ConsoleKey.Escape:
