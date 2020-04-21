@@ -70,7 +70,7 @@ namespace Strompi3Lib
             port.Write("status-rpi");
             port.Write("\r"); // \x0d = {13} Carriage Return
 
-            string sp3Time = port.ReadLine();
+            string sp3Time = port.ReadLine();  // timeout
             string sp3Date = port.ReadLine();
 
             settings.SetRTCDateTime(sp3Time, sp3Date);
