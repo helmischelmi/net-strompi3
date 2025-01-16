@@ -7,7 +7,7 @@ namespace Strompi3Console
     public class Program
     {
 
-        public static string MenuTitle = "Strompi3 - Management Console (Core 3.1) V 0.1";
+        public static string MenuTitle = "Strompi3 - Management Console (.NET 8) V 0.1";
         public static string SubTitle = "Strompi3";
 
         public static StromPi3 configuredUps;

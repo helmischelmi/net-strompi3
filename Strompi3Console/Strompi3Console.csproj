@@ -2,15 +2,24 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <RuntimeIdentifier>linux-arm</RuntimeIdentifier>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="E:\Projects\NetCore\Here.Common\StromPi3\Strompi3Console\publish50.bat" />
+    <Exec Command="powershell -ExecutionPolicy Bypass -File &quot;$(ProjectDir)DeployToRaspberry240308.ps1&quot;" />
   </Target>
+
+  <ItemGroup>
+    <PackageReference Include="System.IO.Ports" Version="9.0.1" />
+    <PackageReference Include="System.Text.Json" Version="9.0.1" />
+  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Strompi3Lib\Strompi3Lib.csproj" />
   </ItemGroup>
 
 </Project>
+
