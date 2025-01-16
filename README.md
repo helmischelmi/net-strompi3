@@ -1,5 +1,5 @@
 # net-strompi3
-A very basic net-project of StromPi3 (Firmware-Version 1.72 required) (from joy-it: https://github.com/joy-it/strompi3) using .Net Core 3.1.
+A very basic net-project of StromPi3 (Firmware-Version 1.72 required, 1.8 as optimum) (from joy-it: https://github.com/joy-it/strompi3) using .Net 8.
 
 Ports python-scripts 'StromPi3_Status.py', 'RTCSerial.py' and 'serialShutdown.py'
 provided by joy-it (https://strompi.joy-it.net/downloads/)
