@@ -1,12 +1,11 @@
-﻿namespace Strompi3Lib
+﻿namespace Strompi3Lib;
+
+public enum EUpsState
 {
-    public enum EUpsState
-    {
-        InvalidSettings,
-        BatteryLevelBelowMinimum,
-        PowerOk,
-        PowerFailure,
-        PowerBack,
-        ShutdownNow
-    }
+    InvalidSettings,
+    BatteryLevelBelowMinimum,
+    PowerOk,
+    PowerFailure,
+    PowerBack,
+    ShutdownNow
 }

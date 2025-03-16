@@ -1,14 +1,13 @@
-﻿namespace Strompi3Lib
+﻿namespace Strompi3Lib;
+
+public enum EWeekday
 {
-    public enum EWeekday
-    {
-        nothing = 0,
-        Monday = 1,
-        Tuesday = 2,
-        Wednesday = 3,
-        Thursday = 4,
-        Friday = 5,
-        Saturday = 6,
-        Sunday = 7,
-    }
+    nothing = 0,
+    Monday = 1,
+    Tuesday = 2,
+    Wednesday = 3,
+    Thursday = 4,
+    Friday = 5,
+    Saturday = 6,
+    Sunday = 7,
 }
