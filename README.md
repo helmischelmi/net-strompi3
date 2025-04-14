@@ -1,7 +1,8 @@
 # net-strompi3
-A very basic net-project of StromPi3 (Firmware-Version 1.72 required, 1.8 as optimum) (from joy-it: https://github.com/joy-it/strompi3) using .Net 8.
+A very basic net-console-project with classic menu to get to know the StromPi3 (Firmware-Version 1.72 required, 1.8 as optimum) (from joy-it: https://github.com/joy-it/strompi3) using .Net 8.
+It reads the status & configuration, changes the configuration and is enabled to react on events like powerfail/powerIsBack from the serial port of the stromPi3 whil doing status requests simultaneously.
 
-Ports python-scripts 'StromPi3_Status.py', 'RTCSerial.py' and 'serialShutdown.py'
+It ports python-scripts 'StromPi3_Status.py', but sudo-permissions are needed to port 'RTCSerial.py' and 'serialShutdown.py' successfully,
 provided by joy-it (https://strompi.joy-it.net/downloads/)
 
 Start: sudo dotnet Strompi3Console.dll
