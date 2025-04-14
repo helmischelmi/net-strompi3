@@ -22,6 +22,7 @@ Output 2:
 No. 3 opens the configuration menu (only submenu): 
 
 ![ChangeConfigurationComplete_Strompi3](https://github.com/user-attachments/assets/8af3ca2a-07ab-4a64-8d00-6ebd845d1c51)
+
 Here, the first No 1 works, rest is experimental
 
 
