@@ -9,7 +9,7 @@ Start: sudo dotnet Strompi3Console.dll
 opens the main menu:
 ![Menu_Strompi3](https://github.com/user-attachments/assets/55c1132e-b407-4abc-87fe-2bdbaf63f641)
 
-No. 1 - 5 and 0 are working. Item 6 isn't implemented yet
+No. 1 - 5 and 7 are working. Item 6 isn't implemented yet
 
 No. 3 opens the configuration menu (only submenu): 
 https://github.com/helmischelmi/net-strompi3/blob/master/assets/Strompi3Console_ConfigMenu.png
