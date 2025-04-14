@@ -7,6 +7,7 @@ provided by joy-it (https://strompi.joy-it.net/downloads/)
 
 Start: sudo dotnet Strompi3Console.dll
 opens the main menu:
+
 ![Menu_Strompi3](https://github.com/user-attachments/assets/55c1132e-b407-4abc-87fe-2bdbaf63f641)
 
 No. 1 - 5 and 7 are working. Item 6 isn't implemented yet
