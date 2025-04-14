@@ -54,6 +54,7 @@ public static class ConverterHelper
         return result;
     }
 
+
     /// <summary>
     /// reads keys from console until ENTER is pressed
     /// </summary>
@@ -63,39 +64,18 @@ public static class ConverterHelper
     /// <returns></returns>
     public static int ReadInt(int min, int max, string msg)
     {
-        Console.WriteLine($"Set {msg} and press ENTER to continue");
-
-        bool bContinue = true;
-        bool bError = false;
-        string strResult = string.Empty;
-        int result = -1;
-
-        while (bContinue)
+        int result;
+        while (true)
         {
-            var keyInfo = Console.ReadKey();// Get user input
+            Console.Write($"Set {msg} ({min} bis {max}) and press ENTER to continue: ");
+            string input = Console.ReadLine();
 
-            if (keyInfo.Key == ConsoleKey.Enter && bError == false)
+            if (int.TryParse(input, out result) && result >= min && result <= max)
             {
-                bContinue = false;
-                continue;
+                return result;
             }
 
-            if (!char.IsDigit(keyInfo.KeyChar)) continue;
-
-            strResult += keyInfo.KeyChar.ToString();
-
-            result = int.Parse(strResult);
-
-            if (result >= min && result <= max)
-            {
-                bError = false;
-                continue;
-            }
-            strResult = string.Empty;
-            Console.CursorLeft = 0;
-            bError = true;
+            Console.WriteLine($"Ungültige Eingabe. Bitte eine Zahl zwischen {min} und {max} eingeben.");
         }
-        Console.WriteLine();
-        return result;
     }
 }

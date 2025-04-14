@@ -14,17 +14,16 @@ public static class Os
 {
     /// <summary>
     /// prepares os call setting the system date, see https://linux.die.net/man/1/date
+    /// needs admin rights (sudo), e.g. 'sudo date -s 2014-12-25 +12:34:56'
     /// </summary>
     /// <param name="dateTime"></param>
     /// <returns></returns>
-    public static void SetDateTime(DateTime dateTime)
+    public static void SetSystemDateTime(DateTime dateTime)
     {
-        //os-call: sudo date -s '2014-12-25 12:34:56'
-        string exe = $"date";
-        string arguments = $" -s {dateTime.Year}-{dateTime.Month}-{dateTime.Day}" +
-                           $" {dateTime.Hour}:{dateTime.Minute}:{dateTime.Second}";
+        string command = "date"; 
+        string arguments = $"-s {dateTime:yyyy-MM-dd +HH:mm:ss}";
 
-        OsCall(exe, arguments);
+        OsCall(command, arguments);
     }
 
     /// <summary>
@@ -34,7 +33,7 @@ public static class Os
     /// on the system.
     /// </summary>
     /// <returns></returns>
-    public static bool IsSerialConsoleDeactivatedAndSerialPortActive()
+    public static bool IsSerialConsoleDeactivatedAndSerialPortActive(bool bSilent = false)
     {
         try
         {
@@ -44,22 +43,37 @@ public static class Os
                                File.ReadAllLines(configTxtPath)
                                    .Any(line => line.Trim().StartsWith("enable_uart=1"));
 
-            Console.WriteLine($" - Enabling UART is: {uartEnabled}");
+            if (!bSilent) Console.WriteLine($" - Enabling UART is: {uartEnabled}");
 
             bool uartOverlayEnabled = File.Exists(configTxtPath) &&
                                File.ReadAllLines(configTxtPath)
                                    .Any(line => line.Trim().StartsWith("dtoverlay=miniuart-bt"));
 
-            Console.WriteLine($" - Enabling dtoverlay= miniuart-bt: {uartOverlayEnabled}");
+            if (!bSilent) Console.WriteLine($" - Enabling dtoverlay= miniuart-bt: {uartOverlayEnabled}");
 
             // Checks, if serial console in /boot/cmdline.txt is active
             string cmdlineTxtPath = "/boot/firmware/cmdline.txt";   // rasbian bookworm: changed the path
             bool serialConsoleActive = File.Exists(cmdlineTxtPath) &&
                                        File.ReadAllText(cmdlineTxtPath).Contains("console=serial");
 
-            Console.WriteLine($" - Serial console is active: {serialConsoleActive}");
+            if (!bSilent) Console.WriteLine($" - Serial console is active: {serialConsoleActive}");
 
-            return uartEnabled && uartOverlayEnabled && !serialConsoleActive;
+            var result = uartEnabled && uartOverlayEnabled && !serialConsoleActive;
+
+            if (result == false)
+            {
+                if (!bSilent)
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine(
+                        "For Strompi3-configuration, the UART must be enabled and the serial console deactivated.");
+                    Console.WriteLine(
+                        "Use 'sudo raspi-config' interfacing-options to adopt serial-configuration and reboot");
+                    Console.ForegroundColor = ConsoleColor.Green;
+                }
+            }
+
+            return result;
         }
         catch (Exception ex)
         {
@@ -76,8 +90,11 @@ public static class Os
     public static bool ShowAvailableSerialPorts(string strRequiredPorts, bool bSilent = false)
     {
         string[] ports = SerialPort.GetPortNames();
-        if (!bSilent) Console.WriteLine("The following serial ports were found:");
-
+        if (!bSilent)
+        {
+            Console.WriteLine();
+            Console.WriteLine("The following serial ports were found:");
+        }
 
         // Display each port name to the console.
         foreach (string port in ports)
@@ -86,30 +103,25 @@ public static class Os
             var isTTY = port.Contains(strRequiredPorts);
             if (isTTY) continue;
 
-            Console.WriteLine($"No {strRequiredPorts}.. serial port!");
+            if (!bSilent) Console.WriteLine($"No {strRequiredPorts}.. serial port found!{Environment.NewLine}");
             return false;
         }
 
-        if (!bSilent) Console.WriteLine("Yes, we have the embedded serial port available.");
-        if (IsSerialConsoleDeactivatedAndSerialPortActive() == false)
-        {
-            Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine("For Strompi3-configuration, the UART must be enabled and the serial console deactivated.");
-            Console.WriteLine("Use 'sudo raspi-config' interfacing-options to adopt serial-settings and reboot");
-            Console.ForegroundColor = ConsoleColor.Green;
-        }
+        if (!bSilent) Console.WriteLine($"Yes, we have the serial port(s) available.{Environment.NewLine}");
+
         return true;
     }
 
+
     /// <summary>
-    /// wraps os call 'sudo shutdown -h now',
-    /// works only with admin rights (sudo)
+    /// wraps os call 'sudo shutdown -h now'
+    /// needs admin rights (sudo)
     /// </summary>
     public static void ShutDown()
     {
-        string exe = $"shutdown";
+        string command = $"shutdown";
         string arguments = $"-h now";
-        OsCall(exe, arguments);
+        OsCall(command, arguments);
     }
 
 

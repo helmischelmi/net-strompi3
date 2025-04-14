@@ -1,10 +1,10 @@
 # define variables
-$projectPath = "E:\Projects\NetCore\Pi\Pi.Common\Pi.HWTest_Strompi3\Strompi3Console"
+$projectPath = "E:\Projects\NetCore\Pi\Pi.Common\Pi.HWTest_Strompi3\StromPi3Monitor.ConsoleApp" 
 $publishOutput = "$projectPathbin\bin\Debug\net8.0\publish\linux-arm"
 $raspberryPiUser = "pi"
-$raspberryPiPw = "raspi240308"
-$raspberryPiIp = "192.168.1.197"
-$raspberryPiPath = "/home/pi/apps/Pi.HWTest_Strompi3"
+$raspberryPiPw = "raspi250126"
+$raspberryPiIp = "192.168.1.56"
+$raspberryPiPath = "/home/pi/apps/Pi.Strompi3"
 $pscpPath = "E:\Projects\NetCore\Pi\deploytool\pscp.exe"
 
 # execute publish-command

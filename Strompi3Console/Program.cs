@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Threading;
+using System.Threading.Tasks;
 using Strompi3Lib;
 using Strompi3Lib.Common;
 
@@ -8,16 +8,15 @@ namespace Strompi3Console;
 public class Program
 {
 
-    public static string MenuTitle = "Strompi3 - Management Console (.NET 8) V 0.1";
+    public static string MenuTitle = "Strompi3 - Management Console (.NET 8) V 0.5";
     public static string SubTitle = "Strompi3";
 
-    public static StromPi3 configuredUps;
 
     #region Menu-control
     /// <summary>
     /// Main menu
     /// </summary>
-    static void Main(string[] args)
+    static async Task Main(string[] args)
     {
 
         bool waitForDebugger = true;
@@ -42,16 +41,18 @@ public class Program
                 Console.SetCursorPosition(10, 14);
                 Console.Write("  1  -> Show serial ports on Raspberry");
                 Console.SetCursorPosition(10, 15);
-                Console.Write("  2  -> Get Configuration");
+                Console.Write("  2  -> Get Strompi3 Configuration");
                 Console.SetCursorPosition(10, 16);
-                Console.Write("  3  -> Set Configuration");
+                Console.Write("  3  -> Set Strompi3 Configuration");
                 Console.SetCursorPosition(10, 17);
-                Console.Write("  4  -> Sync RTC with Raspberry");
+                Console.Write("  4  -> Sync RTC of StromPi3 with Raspberry");
                 Console.SetCursorPosition(10, 18);
-                Console.Write("  5  -> TEST: Wait Polling for PowerFailure (SERIAL)");
+                Console.Write("  5  -> Monitor PowerChangedEvent (SERIAL)");
                 Console.SetCursorPosition(10, 19);
-                Console.Write("  6  -> TEST: Wait IRQ for PowerFailure (SERIALLESS)");
+                Console.Write("  6  -> TODO: Wait Polling for PowerIsMissing (SERIAL)");
                 Console.SetCursorPosition(10, 20);
+                Console.Write("  7  -> Get Status and Monitor Power Events (SERIAL)");
+                Console.SetCursorPosition(10, 21);
 
                 Console.SetCursorPosition(10, 22);
                 Console.Write("  0  -> Shutdown Raspberry PI");
@@ -75,14 +76,11 @@ public class Program
 
                     case ConsoleKey.D2:
                     case ConsoleKey.NumPad2:
-                        ShowTitleInteractive(SubTitle, "Get Configuration:");
+                        ShowTitleInteractive(SubTitle, "Get Strompi3 Configuration:");
                         Console.WriteLine();
                         Console.WriteLine();
-                        ApiHelper.InitializeClient();
-                        using (var ups = ApiHelper.Strompi3Client)
-                        {
-                            Console.WriteLine(ups.Settings);
-                        }
+                        StromPi3Manager.GetStatus();
+
                         break;
 
                     case ConsoleKey.D3:
@@ -97,44 +95,44 @@ public class Program
                         ShowTitleInteractive(SubTitle, "Synchronize Date and Time:");
                         Console.WriteLine();
                         Console.WriteLine();
-                        ApiHelper.InitializeClient();
-                        using (var ups = ApiHelper.Strompi3Client)
-                        {
-                            ups.SyncRTC();
-                        }
+                        StromPi3Manager.SynchronizeAndSendRtc();
+
                         break;
 
                     case ConsoleKey.D5:
                     case ConsoleKey.NumPad5:
-                        ShowTitleInteractive(SubTitle, "Wait - Polling for Power Failure:");
+                        ShowTitleInteractive(SubTitle, "Monitor PowerChangedEvent (SERIAL)");
                         Console.WriteLine();
                         Console.WriteLine();
-                        ApiHelper.InitializeClient();
-                        using (var ups = ApiHelper.Strompi3Client)
-                        {
-                            ups.Monitor.Poll();
-                        }
+                        StromPi3Manager.MonitorPowerChangeEvents();
+
                         break;
 
                     case ConsoleKey.D6:
                     case ConsoleKey.NumPad6:
-                        ShowTitleInteractive(SubTitle, "TODO: WaitIRQforPowerFailure:");
+                        ShowTitleInteractive(SubTitle, "TODO: Wait Polling for PowerIsMissing (SERIAL)");
                         Console.WriteLine();
                         Console.WriteLine();
-                        ApiHelper.InitializeClient();
-                        using (var ups = ApiHelper.Strompi3Client)
-                        {
-                            Console.WriteLine("TODO: not implemented");
-                            //ups.Monitor.PowerFailureByIRQ();
-                        }
+
+                        Console.WriteLine("TODO: not implemented");
                         break;
+
+                    case ConsoleKey.D7:
+                    case ConsoleKey.NumPad7:
+                        ShowTitleInteractive(SubTitle, "Get Status and Monitor Power Events (SERIAL)");
+                        Console.WriteLine();
+                        Console.WriteLine();
+                        await StromPi3Manager.GetStatusAndMonitorPowerEventsAsync();
+
+                        Console.WriteLine("TODO: not implemented");
+                        break;
+
 
                     case ConsoleKey.D0:
                     case ConsoleKey.NumPad0:
-                        ShowTitleInteractive(SubTitle, "TODO: Raspberry Pi: running shutdown");
+                        ShowTitleInteractive(SubTitle, "Raspberry Pi: running shutdown");
                         Console.WriteLine();
                         Console.WriteLine();
-                        Thread.Sleep(2000);
                         Os.ShutDown();
                         break;
 
@@ -236,31 +234,31 @@ public class Program
             try
             {
                 // clear console
-                ShowTitleInteractive(MenuTitle, "Configuration Menu");
+                ShowTitleInteractive(MenuTitle, "Strompi3 Configuration Menu");
 
                 // show menu
                 Console.SetCursorPosition(10, 12);
                 Console.Write("Select:");
                 Console.SetCursorPosition(10, 14);
-                Console.Write("  1  -> Modify Configuration (all-in-one) ");
+                Console.Write("  1  -> Edit and Send complete Strompi3 Configuration)");
                 Console.SetCursorPosition(10, 15);
-                Console.Write("  2  -> Transfer Configuration to Strompi3");
+                Console.Write("  2  -> Send Configuration to Strompi3");
                 Console.SetCursorPosition(10, 16);
-                Console.Write("  3  -> Set Power Priority ");
+                Console.Write("  3  -> TODO: Edit Power Priority ");
                 Console.SetCursorPosition(10, 17);
-                Console.Write("  4  -> Set Shutdown-Enable, -Timer and Shutdown-battery-level ");
+                Console.Write("  4  -> TODO: Edit Shutdown-Enable, -Timer and Shutdown-battery-level ");
                 Console.SetCursorPosition(10, 18);
-                Console.Write("  5  -> Set Power Save Mode");
+                Console.Write("  5  -> TODO: Edit Power Save Mode");
                 Console.SetCursorPosition(10, 19);
-                Console.Write("  6  -> Alarm-Enable");
+                Console.Write("  6  -> TODO: Edit Alarm-Enable");
                 Console.SetCursorPosition(10, 20);
-                Console.Write("  7  -> ");
+                Console.Write("  7  -> ...");
                 Console.SetCursorPosition(10, 21);
-                Console.Write("  8  -> ");
+                Console.Write("  8  -> ...");
                 Console.SetCursorPosition(10, 22);
-                Console.Write("  9  -> MOD: Set Power-ON-Button-Enable and -Timer");
+                Console.Write("  9  -> TODO: Set Power-ON-Button-Enable and -Timer");
                 Console.SetCursorPosition(10, 23);
-                Console.Write("  0  -> MOD: Set Serialless-Mode ON/OFF");
+                Console.Write("  0  -> TODO: Set Serialless-Mode ON/OFF");
                 Console.SetCursorPosition(10, 27);
                 Console.Write("Select (ESC to end): ");
 
@@ -272,76 +270,82 @@ public class Program
                 {
                     case ConsoleKey.D1:
                     case ConsoleKey.NumPad1:
-                        ShowTitleInteractive(SubTitle, "Modify Configuration (all-in-one):");
+                        ShowTitleInteractive(SubTitle, "Edit and send Strompi3 complete configuration:");
                         Console.WriteLine();
                         Console.WriteLine();
-                        ApiHelper.EditCompleteConfiguration();
+                        StromPi3Manager.UpdateAndSendConfiguration();
+
                         break;
 
                     case ConsoleKey.D2:
                     case ConsoleKey.NumPad2:
-                        ShowTitleInteractive(SubTitle, "Transfer Configuration to Strompi3:");
+                        ShowTitleInteractive(SubTitle, "Send Configuration to Strompi3:");
                         Console.WriteLine();
                         Console.WriteLine();
-                        ApiHelper.SendConfiguration(configuredUps);
+                        StromPi3Manager.SendConfiguration();
                         break;
 
                     case ConsoleKey.D3:
                     case ConsoleKey.NumPad3:
-                        ShowTitleInteractive(SubTitle, "Set Power Priority:");
+                        ShowTitleInteractive(SubTitle, "TODO: Edit and send Power Priority:");
                         Console.WriteLine();
                         Console.WriteLine();
-                        ApiHelper.EditInputPriorityMode();
+                        //StromPi3Manager.Strompi3Client.UpdateInputPriorityMode(true);
                         break;
 
                     case ConsoleKey.D4:
                     case ConsoleKey.NumPad4:
-                        ShowTitleInteractive(SubTitle, "Set Shutdown-Enable, -Timer and Shutdown-battery-level:");
+                        ShowTitleInteractive(SubTitle, "TODO: Edit and sendShutdown-Enable, -Timer and Shutdown-battery-level:");
                         Console.WriteLine();
                         Console.WriteLine();
-                        ApiHelper.EditShutdownMode();
+                        //StromPi3Manager.Strompi3Client.UpdateShutdownModeAndTimer(true);
                         break;
 
                     case ConsoleKey.D5:
                     case ConsoleKey.NumPad5:
-                        ShowTitleInteractive(SubTitle, "Set Power Save Mode:");
+                        ShowTitleInteractive(SubTitle, "TODO: Edit and send Power Save Mode:");
                         Console.WriteLine();
                         Console.WriteLine();
-                        ApiHelper.EditPowerSaveMode();
+                        // StromPi3Manager.Strompi3Client.UpdatePowerSaveMode(true);
                         break;
 
                     case ConsoleKey.D6:
                     case ConsoleKey.NumPad6:
-                        ShowTitleInteractive(SubTitle, "Alarm-Enable:");
+                        ShowTitleInteractive(SubTitle, "TODO: Edit and send Alarm-Enable:");
                         Console.WriteLine();
                         Console.WriteLine();
-                        ApiHelper.EditAlarmConfiguration();
+                        // StromPi3Manager.Strompi3Client.UpdateAlarmConfiguration(true);
                         break;
 
                     case ConsoleKey.D7:
                     case ConsoleKey.NumPad7:
-                        ShowTitleInteractive(SubTitle, "TBD:");
-
+                        ShowTitleInteractive(SubTitle, " TBD:");
+                        Console.WriteLine();
+                        Console.WriteLine();
+                        //StromPi3Manager.
                         break;
 
                     case ConsoleKey.D8:
                     case ConsoleKey.NumPad8:
                         ShowTitleInteractive(SubTitle, " TBD:");
+                        Console.WriteLine();
+                        Console.WriteLine();
+                        //StromPi3Manager.
                         break;
                     case ConsoleKey.D9:
                     case ConsoleKey.NumPad9:
-                        ShowTitleInteractive(SubTitle, "MOD: Set Power-ON-Button-Enable and -Timer:");
+                        ShowTitleInteractive(SubTitle, "TODO: Edit and send Power-ON-Button-Enable and -Timer:");
                         Console.WriteLine();
                         Console.WriteLine();
-                        ApiHelper.EditPowerOnButton();
+                        //StromPi3Manager.Strompi3Client.UpdatePowerOnButton(true);
                         break;
 
                     case ConsoleKey.D0:
                     case ConsoleKey.NumPad0:
-                        ShowTitleInteractive(SubTitle, "MOD: Set Serialless-Mode ON/OFF:");
+                        ShowTitleInteractive(SubTitle, "TODO: Edit and send Serialless-Mode ON/OFF:");
                         Console.WriteLine();
                         Console.WriteLine();
-                        ApiHelper.EditSerialless();
+                        //StromPi3Manager.Strompi3Client.UpdateSerialless(true);
                         break;
 
                     case ConsoleKey.Escape:

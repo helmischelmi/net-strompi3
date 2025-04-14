@@ -1,10 +1,13 @@
 ﻿using Strompi3Lib.Common;
-using Strompi3Lib.serialPort;
 using System;
 using System.IO.Ports;
-using System.Threading;
+using System.Numerics;
+using System.Threading.Tasks;
+using Strompi3Lib.serialPort;
+
 
 namespace Strompi3Lib;
+
 
 public class UpsMonitor
 {
@@ -12,215 +15,148 @@ public class UpsMonitor
     private const string ShutDownMessage = "ShutdownRaspberryPi";
     private const string PowerBackMessage = "StromPiPowerBack";
 
-    private StromPi3 _ups;
-    private SerialPort Port;
+    private StromPi3 _strompi3;
     private EUpsState State;
 
     private int CountDownSeconds = 0;
     private DateTime PowerFailureStart;
-    private int PollDelayMilliSec = 100;
 
 
-    public UpsMonitor(StromPi3 ups)
+    public UpsMonitor(StromPi3 strompi3)
     {
-        _ups = ups;
-        Port = _ups.Port;
+        _strompi3 = strompi3;
         State = EUpsState.PowerOk;
+
+        // Registrierung des Eventhandlers für das Power-Change-Signal
+
+        _strompi3.PortManager.PowerChangeDetected += OnPowerChanged;
+        Console.WriteLine("OnPowerChanged registriert");
     }
 
-    private void CheckSettings()
+
+    /// <summary>
+    /// event handler, registered to the powerChangeDetected event of StromPi3.
+    /// 
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    private void OnPowerChanged(object sender, EventArgs e)
     {
-        _ups.Port.ReceiveConfiguration(_ups.Settings);
-        CountDownSeconds = _ups.Settings.ShutdownSeconds;
+        Console.WriteLine("OnPowerChanged ausgelöst");
+        Console.WriteLine("UPS Monitor: Power-Change signaled!");
 
-        if (!_ups.Settings.PowerFailWarningEnable)
+        if (((SerialPortEventArgs)e).Message.Contains(PowerFailureMessage)) // "xxx--StromPiPowerfail--xxx"
         {
-            Console.WriteLine("***error: Polling PowerFailure will fail, because PowerFail Warning of Strompi3 is NOT enabled!");
-            State = EUpsState.InvalidSettings;
+            OnPowerFailure(((SerialPortEventArgs)e).Message);
         }
 
-        if ((int)_ups.Settings.BatteryHat.Level <= (int)_ups.Settings.BatteryHat.BatteryShutdownLevel)
+        if (((SerialPortEventArgs)e).Message.Contains(ShutDownMessage)) // "xxx--StromPiPowerfail--xxx"
         {
-            Console.WriteLine("***error: Polling PowerFailure will fail, because Battery Level is already too low!");
-            State = EUpsState.BatteryLevelBelowMinimum;
+            OnShutDown(((SerialPortEventArgs)e).Message);
         }
 
-        if (_ups.Settings.ShutdownEnable) 
+        if (((SerialPortEventArgs)e).Message.Contains(PowerBackMessage)) // "xxx--StromPiPowerfail--xxx"
         {
-            Console.WriteLine("***warning: Immediate Shutdown is enabled in Settings!");
-        }
-
-        if (_ups.Settings.ShutdownSeconds < 10)  // set min. 10 secs
-        {
-            _ups.Settings.SetShutDown(_ups.Settings.ShutdownEnable.ToNumber().ToString(),
-                10, (int)_ups.Settings.BatteryHat.BatteryShutdownLevel);
-            Console.WriteLine("***warning: Set ShutdownSeconds to 10 secs!");
+            OnPowerBack(((SerialPortEventArgs)e).Message);
         }
     }
+
+
+    private bool OnPowerFailure(string msg)
+    {
+        Console.WriteLine("OnPowerFailure ausgelöst");
+        SetState(EUpsState.PowerIsMissing);
+        return msg.Contains(PowerFailureMessage);
+    }
+
+    private bool OnShutDown(string msg)
+    {
+        Console.WriteLine("OnShutDown ausgelöst");
+        return msg.Contains(ShutDownMessage);
+    }
+
+
+    private bool OnPowerBack(string msg)
+    {
+        Console.WriteLine("OnPowerBack ausgelöst");
+        SetState(EUpsState.PowerBack);
+        return msg.Contains(PowerBackMessage);
+    }
+
+
 
     /// <summary>
     /// 
     /// </summary>
-    /// <param name="data"></param>
-    private void SwitchState(string data)
+    /// <param name="state"></param>
+    private void SetState(EUpsState state)
     {
-        //Console.WriteLine($"Switch State ({State}): <{data}>");
+        State = state;
 
-        if (State == EUpsState.PowerOk)
+        if (State == EUpsState.PowerIsMissing)
         {
-            if (data.Contains(PowerFailureMessage))
-            {
-                State = EUpsState.PowerFailure; // Start countdown
-                PowerFailureStart = DateTime.Now.AddSeconds(-10);  // give 10 secs to shutdown by script before power is turned of
-                Console.WriteLine($"SET PowerFailure - Start Countdown at : <{PowerFailureStart.ToLongTimeString()}>");
-                CountDownSeconds = Convert.ToInt32((DateTime.Now - PowerFailureStart).TotalSeconds);
-            }
+            Console.WriteLine($"STATE Power is Missing");
+            Console.WriteLine($"Countdown is enabled  : {_strompi3.Cfg.ShutdownEnable}");
+            Console.WriteLine($"Failure counter is    : {_strompi3.Cfg.PowerFailureCounter}");
+            Console.WriteLine($"Countdown to shutdown : {_strompi3.Cfg.ShutdownSeconds} seconds");
 
-            if (data.Contains(ShutDownMessage))
+            PowerFailureStart = DateTime.Now;
+            CountDownSeconds = _strompi3.Cfg.ShutdownSeconds;
+            int currentcountDownSeconds = 0;
+
+ 
+            // Start des Countdowns mit Überprüfung des aktuellen Zustands in jedem Zyklus:
+            while (currentcountDownSeconds < CountDownSeconds && State == EUpsState.PowerIsMissing)
             {
+                currentcountDownSeconds = (int)(DateTime.Now - PowerFailureStart).TotalSeconds;
+                Console.Write($"\rCountdown {currentcountDownSeconds} of {CountDownSeconds} seconds");
+                Task.Delay(900).Wait();
+            }
+            Console.WriteLine();
+
+            if (State == EUpsState.PowerIsMissing)
+            {
+                // Countdown wurde vollständig durchlaufen, ohne dass ein PowerBack erfolgte.
                 State = EUpsState.ShutdownNow;
-                Console.WriteLine();
-                Console.WriteLine($"Strompi will Shutdown RPi now: {DateTime.Now.ToLongTimeString()}");
-            }
-
-        }
-
-        if (State == EUpsState.PowerFailure)
-        {
-            if (data.Contains(PowerBackMessage))
-            {
-                State = EUpsState.PowerBack;
-                Console.WriteLine($"SET PowerBack");
-                // log msg
-                State = EUpsState.PowerOk;
-                Console.WriteLine($"SET PowerOK");
-            }
-
-            // continue countdown
-            int tmpSeconds = Convert.ToInt32((DateTime.Now - PowerFailureStart).TotalSeconds);
-            if (tmpSeconds > CountDownSeconds)
-            {
-                CountDownSeconds = tmpSeconds;
-                Console.Write($"\rCountdown {CountDownSeconds} secs (of {_ups.Settings.ShutdownSeconds})");
-            }
-
-
-            // end with shutdown
-            if (CountDownSeconds >= _ups.Settings.ShutdownSeconds)
-            {
-                State = EUpsState.ShutdownNow;
-                Console.WriteLine();
                 Console.WriteLine($"SET Shutdown at {DateTime.Now.ToLongTimeString()}");
             }
-        }
-
-        //Console.WriteLine($"leave State ({State})");
-    }
-
-    /// <summary>
-    /// Polls the powerFail-warning- (if enabled in configuration) and powerBack-signal.
-    /// <para>Requires serial-mode</para>
-    /// </summary>
-    public void Poll()
-    {
-        CheckSettings();
-
-        if (State != EUpsState.PowerOk)
-        {
-            Console.WriteLine("***Error: Strompi3 can't start monitoring");
-            return;
-        }
-
-        if (!Port.IsOpen) Port.Open();
-        while (State != EUpsState.ShutdownNow)
-        {
-            Thread.Sleep(PollDelayMilliSec);
-            string data = String.Empty;
-            try
+            else
             {
-                data = Port.ReadLine();
+                // Der Countdown wurde unterbrochen, weil sich der Zustand z. B. auf PowerBack geändert hat.
+                Console.WriteLine("Countdown interrupted due to power recovery.");
             }
-            catch (TimeoutException) { }// ignore timeouts
-
-            SwitchState(data);
         }
 
-        Console.WriteLine($"Start Pi shutdown in 3 seconds...");
-        Thread.Sleep(3000);
-        Os.ShutDown();
+        if (State == EUpsState.PowerBack)
+        {
+            Console.WriteLine($"STATE Power OK");
+        }
     }
 
 
-    /// <summary>
-    /// IRQ-based method to get the powerFail-warning- (if enabled in configuration) and powerBack-signal.
-    /// <para>Requires serialless-mode</para>
-    /// </summary>
-    /// <param name="waitForPowerBackTimerSeconds">Seconds to wait for a powerBack-signal before shutting down the Raspberry pi.
-    /// This must be set - or will be forced - lower than the configured shutdown-timer to make a safe shutdown.</param>
-    //public void WaitForPowerFailureIrqToShutDown(int waitForPowerBackTimerSeconds = 10)
-    //{
-    //    bool runCountdown = false;
-    //    DateTime powerFailureStartTime = default;
-
-    //    CheckSettings();
-    //    if (State != EUpsState.PowerOk)
-    //    {
-    //        Console.WriteLine("***Error: Strompi3 can't start monitoring");
-    //        return;
-    //    }
-
-    //    string data = String.Empty;
-
-    //    Console.WriteLine($"PollingShutDownOnPowerFailure (wait {waitForPowerBackTimerSeconds} secs)");
-
-
-    //    while (true)
-    //    {
-    //        Thread.Sleep(100);
-    //        try
-    //        {
-    //            // data = _serialPort.ReadLine();
-    //        }
-    //        catch (TimeoutException) { }  // ignore timeouts
-
-    //        var powerFailureSignal = OnPowerFailureMessage(data);
-    //        var powerBackSignal = OnPowerBackMessage(data);
-
-    //        if (powerFailureSignal || runCountdown)
-    //        {
-    //            if (runCountdown == false)
-    //            {
-    //                runCountdown = true;
-    //                powerFailureStartTime = DateTime.Now;
-    //            }
-
-    //            int countdownSeconds = Convert.ToInt32((DateTime.Now - powerFailureStartTime).TotalSeconds);
-    //            Console.WriteLine($"PowerFail - run countdown to shutdown the Pi ({waitForPowerBackTimerSeconds - countdownSeconds} secs)");
-
-    //            if (countdownSeconds >= waitForPowerBackTimerSeconds)
-    //            {
-    //                Console.WriteLine($"Raspberry Pi: running shutdown...");
-    //                Thread.Sleep(1000);
-    //                Os.ShutDown();
-    //            }
-    //        }
-
-    //        if (powerBackSignal && runCountdown)
-    //        {
-    //            Console.WriteLine("PowerBack - aborting Raspberry Pi shutdown");
-    //            runCountdown = false;
-    //        }
-    //    }
-    //}
-
-    private bool OnPowerFailureMessage(string data)
+    private void CheckSettings()
     {
-        return data.Contains(PowerFailureMessage);
-    }
+        _strompi3.ReceiveStatus();
+        CountDownSeconds = _strompi3.Cfg.ShutdownSeconds;
+
+        if (!_strompi3.Cfg.PowerFailWarningEnable)
+        {
+            Console.WriteLine("***error: Polling PowerIsMissing will fail, because PowerFail Warning of Strompi3 is NOT enabled!");
+            State = EUpsState.InvalidSettings;
+        }
+
+        if ((int)_strompi3.Cfg.BatteryHat.Level <= (int)_strompi3.Cfg.BatteryHat.BatteryShutdownLevel)
+        {
+            Console.WriteLine("***error: Polling PowerIsMissing will fail, because Battery Level is already too low!");
+            State = EUpsState.BatteryLevelBelowMinimum;
+        }
 
 
-    private bool OnPowerBackMessage(string data)
-    {
-        return data.Contains(PowerBackMessage);
+        if (_strompi3.Cfg.ShutdownSeconds < 10)  // set min. 10 secs
+        {
+            _strompi3.Cfg.GetShutDown(_strompi3.Cfg.ShutdownEnable.ToNumber().ToString(),
+                10, (int)_strompi3.Cfg.BatteryHat.BatteryShutdownLevel);
+            Console.WriteLine("***warning: Set ShutdownSeconds to 10 secs!");
+        }
     }
 }

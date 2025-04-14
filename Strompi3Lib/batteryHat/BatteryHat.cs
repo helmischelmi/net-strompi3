@@ -47,7 +47,7 @@ public class BatteryHat
     }
 
     /// <summary>
-    /// sets the given level, if input ist vald, else EShutdownLevel.nothing 
+    /// sets the given level, if input ist valid, else EShutdownLevel.nothing 
     /// </summary>
     /// <param name="levelShutdown"></param>
     public void SetShutdownLevel(int levelShutdown)

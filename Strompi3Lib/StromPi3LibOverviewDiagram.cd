@@ -1,0 +1,93 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1" MembersFormat="NameAndType">
+  <Class Name="Strompi3Lib.StromPi3">
+    <Position X="0.5" Y="6" Width="3" />
+    <AssociationLine Name="Cfg" Type="Strompi3Lib.StromPi3Configuration" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="2" Y="6" />
+        <Point X="2" Y="5.938" />
+        <Point X="4.5" Y="5.938" />
+      </Path>
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="0.62" Y="0.133" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAEAIEDAACQAEGACSAACAAAMCAAAAAGFAQgBAAEA=</HashCode>
+      <FileName>StromPi3.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Cfg" />
+      <Property Name="Monitor" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Strompi3Lib.Common.ConsoleDigitRetriever" Collapsed="true">
+    <Position X="8" Y="6.75" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Common\ConsoleDigitRetriever.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Strompi3Lib.Common.TestDigitRetriever" Collapsed="true">
+    <Position X="8" Y="7.75" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Common\ConsoleDigitRetriever.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Strompi3Lib.Common.ConverterHelper">
+    <Position X="8" Y="9" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAQQAAEAAAAAAgAAAAAAAIAAAAA=</HashCode>
+      <FileName>Common\ConverterHelper.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Strompi3Lib.serialPort.SerialPortManager">
+    <Position X="7.5" Y="0.75" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AIBAAAAAACAAYACEAAAAIAhAAAAQAgAICgAEAACUAAA=</HashCode>
+      <FileName>serialPort\SerialPortManager.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Strompi3Lib.StromPi3Configuration">
+    <Position X="4.5" Y="0.75" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AgAgAgAgAAIQAAAEAgAAIAAAKACgAACExAABAAAgCMA=</HashCode>
+      <FileName>StromPi3Configuration.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Strompi3Lib.UpsMonitor">
+    <Position X="4.5" Y="6.75" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>CAAFDAAIAAAAAAAAAAAQIEAAAAEAAAAAEAAARAAAAAA=</HashCode>
+      <FileName>UpsMonitor.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="State" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="Strompi3Lib.StromPi3Manager">
+    <Position X="0.5" Y="0.5" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAABIAQAAAAMEAAIAAAAAAAAAAAEAAAA=</HashCode>
+      <FileName>StromPi3Manager.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Interface Name="Strompi3Lib.IStromPi3">
+    <Position X="0.5" Y="3.25" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAIAAAACQAAEACAAAAAAAAAAAAAAAEAAAAAAAA=</HashCode>
+      <FileName>IStromPi3.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Enum Name="Strompi3Lib.EUpsState">
+    <Position X="4.5" Y="10.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>ACAAAAAAAAEAAAAASAAAAAAEAAAAAAAAAAAAAAAAQAA=</HashCode>
+      <FileName>EUpsState.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

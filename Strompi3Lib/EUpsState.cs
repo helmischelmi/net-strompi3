@@ -5,7 +5,7 @@ public enum EUpsState
     InvalidSettings,
     BatteryLevelBelowMinimum,
     PowerOk,
-    PowerFailure,
+    PowerIsMissing,
     PowerBack,
     ShutdownNow
 }

@@ -1,6 +1,6 @@
 ﻿namespace Strompi3Lib;
 
-public enum EOutputStatus
+public enum EPowerInputSource
 {
     PowerOff = 0, // #only for Debugging-Purposes
     mUSB = 1,

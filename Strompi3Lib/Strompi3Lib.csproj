@@ -8,6 +8,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="serialPort\SerialPortParameters.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="InputSimulatorCore" Version="1.0.5" />
     <PackageReference Include="System.IO.Ports" Version="9.0.1" />
     <PackageReference Include="Iot.Device.Bindings" Version="3.2.0" />

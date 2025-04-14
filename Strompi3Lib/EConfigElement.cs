@@ -4,6 +4,9 @@ namespace Strompi3Lib;
 
 public enum EConfigElement
 {
+    /// <summary>
+    /// Resets the StromPi3 to default settings.
+    /// </summary>
     [Description("[ModusReset]")]
     ModusReset = 0,
 

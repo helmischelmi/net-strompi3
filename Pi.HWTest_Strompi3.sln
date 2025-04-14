@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Strompi3Console", "Strompi3
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Strompi3Lib", "Strompi3Lib\Strompi3Lib.csproj", "{3DF6E59A-A05B-4FEE-A92F-7F67613B55AE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StromPi3Monitor.ConsoleApp", "StromPi3Monitor.ConsoleApp\StromPi3Monitor.ConsoleApp.csproj", "{BE83FC21-AF9F-40FC-B03F-B5229E203051}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{3DF6E59A-A05B-4FEE-A92F-7F67613B55AE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3DF6E59A-A05B-4FEE-A92F-7F67613B55AE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3DF6E59A-A05B-4FEE-A92F-7F67613B55AE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BE83FC21-AF9F-40FC-B03F-B5229E203051}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BE83FC21-AF9F-40FC-B03F-B5229E203051}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BE83FC21-AF9F-40FC-B03F-B5229E203051}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BE83FC21-AF9F-40FC-B03F-B5229E203051}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
