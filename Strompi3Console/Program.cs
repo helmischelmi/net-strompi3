@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Pi.Common;
+using Pi.Common.utils;
 using Strompi3Lib;
 using Strompi3Lib.Common;
 
@@ -122,9 +124,8 @@ public class Program
                         ShowTitleInteractive(SubTitle, "Get Status and Monitor Power Events (SERIAL)");
                         Console.WriteLine();
                         Console.WriteLine();
-                        await StromPi3Manager.GetStatusAndMonitorPowerEventsAsync();
-
-                        Console.WriteLine("TODO: not implemented");
+                        var status = await StromPi3Manager.GetStatusAndMonitorPowerEventsAsync();
+                        Console.WriteLine(status.ToString());
                         break;
 
 

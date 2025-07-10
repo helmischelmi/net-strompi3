@@ -8,19 +8,25 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Common\AttachDebuggerHelper.cs" />
+    <Compile Remove="Common\Os.cs" />
     <Compile Remove="serialPort\SerialPortParameters.cs" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="InputSimulatorCore" Version="1.0.5" />
-    <PackageReference Include="System.IO.Ports" Version="9.0.1" />
+    <PackageReference Include="System.IO.Ports" Version="9.0.4" />
     <PackageReference Include="Iot.Device.Bindings" Version="3.2.0" />
     <PackageReference Include="System.Device.Gpio" Version="3.2.0" />
-    <PackageReference Include="System.Text.Json" Version="9.0.1" />
+    <PackageReference Include="System.Text.Json" Version="9.0.4" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="pyScripts\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Pi.Common\Pi.Common.csproj" />
   </ItemGroup>
 
 

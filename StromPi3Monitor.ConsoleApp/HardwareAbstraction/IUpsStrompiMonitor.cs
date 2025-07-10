@@ -6,9 +6,5 @@ namespace StromPi3Monitor.ConsoleApp.HardwareAbstraction;
 
 public interface IUpsStrompiMonitor
 {
-    event EventHandler PowerFailure;
-
-    Task MonitorUpsAsync(CancellationToken token);
-
-    Task<bool> CheckPowerStatusAsync();
+    public Task MonitorUpsAsync(CancellationToken token);
 }

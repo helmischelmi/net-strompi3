@@ -2,6 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Iot.Device.RotaryEncoder;
+using Pi.Common;
 using Strompi3Lib.Common;
 using Strompi3Lib.serialPort;
 
@@ -38,19 +39,21 @@ public class StromPi3Manager
     }
 
 
-    public static async Task GetStatusAndMonitorPowerEventsAsync()
+    public static async Task<StromPi3Configuration?> GetStatusAndMonitorPowerEventsAsync()
     {
-        CancellationTokenSource cts = new CancellationTokenSource();
+        StromPi3Configuration? result = null;
+
+        var cts = new CancellationTokenSource();
 
         using (var spManager = new SerialPortManager())
         {
             spManager.Open();
             var stromPi3 = new StromPi3(spManager);
-            stromPi3.ReceiveStatus();
+            //result = stromPi3.ReceiveStatus();
 
             Console.WriteLine("Drücken Sie 'Q', um das Programm zu beenden.");
 
-            Task? commandTask = null;
+            Task<StromPi3Configuration> commandTask = null;
             while (true)
             {
                 // Überprüfe, ob der Benutzer 'Q' drückt, um das Programm zu beenden
@@ -68,19 +71,59 @@ public class StromPi3Manager
                 // Starte den Task nur, wenn er noch nicht läuft oder bereits abgeschlossen ist.
                 if (commandTask == null || commandTask.IsCompleted)
                 {
-                    commandTask = ReceiveStatusAsync(stromPi3, cts.Token,3);
+                    commandTask = ReceiveStatusAsync(stromPi3, cts.Token, 3);
+                    
                     Console.WriteLine($"ReceiveStatusAsync wurde gestartet: {DateTime.Now:T}.");
-                    Console.WriteLine("Drücken Sie 'Q', um das Programm zu beenden.");
+                    Console.WriteLine("Drücken Sie 'Q', um das Programm zu beenden.");                    
+                    
+                    result = commandTask.Result;
+                    Console.WriteLine($"Status {Environment.NewLine}:{result}");
                 }
             }
 
             if (commandTask != null)
             {
-                await commandTask; // Warte, bis der laufende Task beendet ist.
+                result = commandTask.Result;// Warte, bis der laufende Task beendet ist.
             }
         }
+
+        return result;
     }
 
+
+    public static async Task<StromPi3Configuration?> GetStatusAndMonitorPowerEventsAsync(CancellationToken token)
+    {
+        StromPi3Configuration? result = null;
+
+        var cts = new CancellationTokenSource();
+
+        using (var spManager = new SerialPortManager())
+        {
+            spManager.Open();
+            var stromPi3 = new StromPi3(spManager);
+           
+         Task<StromPi3Configuration> commandTask = null;
+            while (token.IsCancellationRequested == false)
+            {
+                // Starte den Task nur, wenn er noch nicht läuft oder bereits abgeschlossen ist.
+                if (commandTask == null || commandTask.IsCompleted)
+                {
+                    commandTask = ReceiveStatusAsync(stromPi3, cts.Token, 3);
+
+                    result = commandTask.Result;
+
+                    Console.WriteLine($"ReceiveStatusAsync wurde gestartet: {DateTime.Now:T}.");
+                }
+            }
+
+            if (commandTask != null)
+            {
+                result = commandTask.Result;// Warte, bis der laufende Task beendet ist.
+            }
+        }
+
+        return result;
+    }
 
     /// <summary>
     /// Receives the status of the StromPi3 and prints it to the console.
@@ -90,9 +133,9 @@ public class StromPi3Manager
     /// <param name="token"></param>
     /// <param name="forcedDelayInMinutes"></param>
     /// <returns></returns>
-    static async Task? ReceiveStatusAsync(StromPi3 stromPi3, CancellationToken token, int forcedDelayInMinutes = 0)
+    static async Task<StromPi3Configuration> ReceiveStatusAsync(StromPi3 stromPi3, CancellationToken token, int forcedDelayInMinutes = 0)
     {
-        stromPi3.ReceiveStatus();
+        var status = stromPi3.ReceiveStatus();
 
         Console.WriteLine(stromPi3.ToString());
 
@@ -109,7 +152,8 @@ public class StromPi3Manager
             }
         }
 
-        await Task.CompletedTask;
+        //await Task.CompletedTask;
+        return status;
     }
 
     /// <summary>

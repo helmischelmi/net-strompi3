@@ -4,6 +4,7 @@ using System;
 using System.Threading;
 using Strompi3Lib.serialPort;
 using System.Device.Gpio;
+using Pi.Common;
 
 namespace Strompi3Lib;
 
@@ -162,9 +163,9 @@ public class StromPi3 : IStromPi3
 
         UpdateShutdownModeAndTimer();
 
-        UpdateSerialless();
+        //UpdateSerialless();
 
-        UpdatePowerSaveMode();
+        //UpdatePowerSaveMode();
 
         UpdatePowerFailWarning();
 
@@ -310,11 +311,11 @@ public class StromPi3 : IStromPi3
         Console.WriteLine($"2. Current Shutdown Mode (disconnect power supply to raspi): ({Cfg.ShutdownEnable}) ");
         Console.WriteLine($"Current Shutdown-Timer (0..65535 secs): ({Cfg.ShutdownSeconds}) ");
 
-        bool shutdownEnable = ConverterHelper.ReadInt(0, 1, "Set: 0 = False, 1 = True").ToBool();
+        int shutdownEnable = ConverterHelper.ReadInt(0, 1, "Set: 0 = False, 1 = True");
 
         int shutdownSeconds = Cfg.ShutdownSeconds;
 
-        if (shutdownEnable)
+        if (shutdownEnable == 1)
         {
             Console.WriteLine(
                 "Values above 255 won't work with firmware 1.72, see FAQ https://strompi.joy-it.net/questions/question/rpi4-strompi3-shutdown-funktioniert-nicht-korrekt-strompi-schaltet-zu-frueh-ab/page/3/");

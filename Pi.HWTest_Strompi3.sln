@@ -9,6 +9,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Strompi3Lib", "Strompi3Lib\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StromPi3Monitor.ConsoleApp", "StromPi3Monitor.ConsoleApp\StromPi3Monitor.ConsoleApp.csproj", "{BE83FC21-AF9F-40FC-B03F-B5229E203051}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pi.Common", "..\Pi.Common\Pi.Common.csproj", "{52301F0D-41D3-2D6C-178D-F99E2F69F811}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pi.HWTest_ZTE_Router", "..\Pi.HWTest_ZTE_Router\Pi.HWTest_ZTE_Router.csproj", "{3DD50A93-1CB6-4BF8-92B4-B72FCA64D0AE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +31,14 @@ Global
 		{BE83FC21-AF9F-40FC-B03F-B5229E203051}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BE83FC21-AF9F-40FC-B03F-B5229E203051}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BE83FC21-AF9F-40FC-B03F-B5229E203051}.Release|Any CPU.Build.0 = Release|Any CPU
+		{52301F0D-41D3-2D6C-178D-F99E2F69F811}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{52301F0D-41D3-2D6C-178D-F99E2F69F811}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{52301F0D-41D3-2D6C-178D-F99E2F69F811}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{52301F0D-41D3-2D6C-178D-F99E2F69F811}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3DD50A93-1CB6-4BF8-92B4-B72FCA64D0AE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3DD50A93-1CB6-4BF8-92B4-B72FCA64D0AE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3DD50A93-1CB6-4BF8-92B4-B72FCA64D0AE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3DD50A93-1CB6-4BF8-92B4-B72FCA64D0AE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

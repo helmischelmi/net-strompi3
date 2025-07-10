@@ -1,9 +1,12 @@
 ﻿using System;
+using System.Net.Http.Headers;
 using System.Threading;
 using System.Threading.Tasks;
+using Strompi3Lib;
 using StromPi3Monitor.ConsoleApp.HardwareAbstraction;
 
 namespace StromPi3Monitor.ConsoleApp.Services;
+
 
 /// <summary>
 /// Service to monitor Strompi3 UPS
@@ -18,25 +21,11 @@ public class UpsStrompiMonitorService:IUpsStrompiMonitor
     {
         while (!token.IsCancellationRequested)
         {
-            var powerOk = await CheckPowerStatusAsync();
-            if (!powerOk)
-            {
-                // Reagiere auf einen Stromausfall
-                // (z.B. Loggen, Benachrichtigung, etc.)
-            }
+            var status = await StromPi3Manager.GetStatusAndMonitorPowerEventsAsync();
+
+            Console.WriteLine($"Strompi3 has status = {Environment.NewLine} {status}");
+
             await Task.Delay(5000); // Überprüfung alle 5 Sekunden
         }
-    }
-
-
-    public async Task<bool> CheckPowerStatusAsync()
-    {
-        return ReturnPowerDummy();
-    }
-
-    private bool ReturnPowerDummy()
-    {
-        Console.WriteLine("Strompi3 power is ok");
-        return true;
     }
 }
