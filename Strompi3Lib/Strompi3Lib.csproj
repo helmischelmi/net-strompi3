@@ -15,10 +15,11 @@
 
   <ItemGroup>
     <PackageReference Include="InputSimulatorCore" Version="1.0.5" />
-    <PackageReference Include="System.IO.Ports" Version="9.0.4" />
-    <PackageReference Include="Iot.Device.Bindings" Version="3.2.0" />
-    <PackageReference Include="System.Device.Gpio" Version="3.2.0" />
-    <PackageReference Include="System.Text.Json" Version="9.0.4" />
+    <PackageReference Include="Spectre.Console" Version="0.50.0" />
+    <PackageReference Include="System.IO.Ports" Version="9.0.7" />
+    <PackageReference Include="Iot.Device.Bindings" Version="4.0.1" />
+    <PackageReference Include="System.Device.Gpio" Version="4.0.1" />
+    <PackageReference Include="System.Text.Json" Version="9.0.7" />
   </ItemGroup>
 
   <ItemGroup>

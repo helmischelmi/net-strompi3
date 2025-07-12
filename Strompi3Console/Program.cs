@@ -51,7 +51,7 @@ public class Program
                 Console.SetCursorPosition(10, 18);
                 Console.Write("  5  -> Monitor PowerChangedEvent (SERIAL)");
                 Console.SetCursorPosition(10, 19);
-                Console.Write("  6  -> TODO: Wait Polling for PowerIsMissing (SERIAL)");
+                Console.Write("  6  -> Do SelfCheck with expected Status");
                 Console.SetCursorPosition(10, 20);
                 Console.Write("  7  -> Get Status and Monitor Power Events (SERIAL)");
                 Console.SetCursorPosition(10, 21);
@@ -112,11 +112,11 @@ public class Program
 
                     case ConsoleKey.D6:
                     case ConsoleKey.NumPad6:
-                        ShowTitleInteractive(SubTitle, "TODO: Wait Polling for PowerIsMissing (SERIAL)");
+                        ShowTitleInteractive(SubTitle, "Do SelfCheck with expected Status");
                         Console.WriteLine();
                         Console.WriteLine();
 
-                        Console.WriteLine("TODO: not implemented");
+                        StromPi3Manager.GetStatusAndCompare(StromPi3.CreateExpectedConfigForBe102Manually());
                         break;
 
                     case ConsoleKey.D7:

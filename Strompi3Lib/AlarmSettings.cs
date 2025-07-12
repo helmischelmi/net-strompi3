@@ -5,22 +5,22 @@ namespace Strompi3Lib;
 
 public class AlarmSettings
 {
-    public bool WakeupEnable { get; private set; }
+    public bool WakeupEnable { get; internal set; }
     public bool PowerOffEnable { get; private set; }
-    public bool IntervalAlarmEnable { get; private set; }
+    public bool IntervalAlarmEnable { get; internal set; }
     public int IntervalAlarmOnMinutes { get; private set; }
     public int IntervalAlarmOffMinutes { get; private set; }
-    public EAlarmMode Mode { get; private set; }
+    public EAlarmMode Mode { get; internal set; }
     public int PowerOffHour { get; private set; }
     public int PowerOffMinute { get; private set; }
-    public int WakeUpHour { get; private set; }
-    public int WakeUpMinute { get; private set; }
-    public int WakeUpDay { get; private set; }
-    public int WakeUpMonth { get; private set; }
-    public EWeekday WakeUpWeekday { get; private set; }
+    public int WakeUpHour { get; internal set; }
+    public int WakeUpMinute { get; internal set; }
+    public int WakeUpDay { get; internal set; }
+    public int WakeUpMonth { get; internal set; }
+    public EWeekday WakeUpWeekday { get; internal set; }
 
-    public int WakeupTimerMinutes { get; private set; }
-    public bool WakeUpWeekendEnable { get; private set; }
+    public int WakeupTimerMinutes { get; internal set; }
+    public bool WakeUpWeekendEnable { get; internal set; }
 
     public void GetAlarmEnabled(string sp3AlarmEnable)
     {

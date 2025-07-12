@@ -111,13 +111,13 @@ public class SerialPortManager : IDisposable
 
 
     /// <summary>
-    /// Checks if the message is an asynchronous event, determined via the message prefix "xxx--".
+    /// Checks if the message is an asynchronous event, determined via the message prefix "xxx".
     /// </summary>
     /// <param name="message"></param>
     /// <returns></returns>
     private bool IsAsynchronousEvent(string message)
     {
-        return message.Trim().StartsWith("xxx--");
+        return message.Trim().StartsWith("xxx");
     }
 
 

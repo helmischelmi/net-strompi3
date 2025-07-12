@@ -1,19 +1,33 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1" MembersFormat="NameAndType">
   <Class Name="Strompi3Lib.StromPi3">
-    <Position X="0.5" Y="6" Width="3" />
+    <Position X="0.5" Y="3.25" Width="3" />
     <AssociationLine Name="Cfg" Type="Strompi3Lib.StromPi3Configuration" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
       <Path>
-        <Point X="2" Y="6" />
-        <Point X="2" Y="5.938" />
-        <Point X="4.5" Y="5.938" />
+        <Point X="2" Y="3.25" />
+        <Point X="2" Y="3.188" />
+        <Point X="3.562" Y="3.188" />
+        <Point X="3.562" Y="5.688" />
+        <Point X="4" Y="5.688" />
+      </Path>
+      <MemberNameLabel ManuallyPlaced="true" ManuallySized="true">
+        <Position X="0.724" Y="2.706" Height="0.182" Width="0.576" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <AssociationLine Name="Monitor" Type="Strompi3Lib.UpsMonitor" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="3.5" Y="8.812" />
+        <Point X="3.938" Y="8.812" />
+        <Point X="3.938" Y="9.521" />
+        <Point X="5.438" Y="9.521" />
+        <Point X="5.438" Y="9.75" />
       </Path>
       <MemberNameLabel ManuallyPlaced="true">
-        <Position X="0.62" Y="0.133" />
+        <Position X="0.698" Y="0.212" />
       </MemberNameLabel>
     </AssociationLine>
     <TypeIdentifier>
-      <HashCode>AAAAAEAIEDAACQAEGACSAACAAAMCAAAAAGFAQgBAAEA=</HashCode>
+      <HashCode>AAAAAEAIEDAACQAEGACSAQCAAAMCAAAAAGFAQgBAAEA=</HashCode>
       <FileName>StromPi3.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
@@ -23,21 +37,29 @@
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="Strompi3Lib.Common.ConsoleDigitRetriever" Collapsed="true">
-    <Position X="8" Y="6.75" Width="2.5" />
+    <Position X="8" Y="10" Width="2.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Common\ConsoleDigitRetriever.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Strompi3Lib.Common.TestDigitRetriever" Collapsed="true">
-    <Position X="8" Y="7.75" Width="2.5" />
+    <Position X="8" Y="10.75" Width="2.5" />
+    <InheritanceLine Type="Strompi3Lib.Common.ConsoleDigitRetriever" FixedFromPoint="true">
+      <Path>
+        <Point X="8" Y="10.312" />
+        <Point X="7.625" Y="10.312" />
+        <Point X="7.625" Y="11.096" />
+        <Point X="8" Y="11.096" />
+      </Path>
+    </InheritanceLine>
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Common\ConsoleDigitRetriever.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Strompi3Lib.Common.ConverterHelper">
-    <Position X="8" Y="9" Width="2.5" />
+    <Position X="8" Y="11.5" Width="2.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAQQAAEAAAAAAgAAAAAAAIAAAAA=</HashCode>
       <FileName>Common\ConverterHelper.cs</FileName>
@@ -52,14 +74,17 @@
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="Strompi3Lib.StromPi3Configuration">
-    <Position X="4.5" Y="0.75" Width="2.75" />
+    <Position X="4" Y="0.5" Width="2.75" />
     <TypeIdentifier>
-      <HashCode>AgAgAgAgAAIQAAAEAgAAIAAAKACgAACExAABAAAgCMA=</HashCode>
+      <HashCode>AgAgAgAgAAIQAAAEAgAAIAAAKACgAACURAABAEAgCMA=</HashCode>
       <FileName>StromPi3Configuration.cs</FileName>
     </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="StartStopSettings" />
+    </ShowAsAssociation>
   </Class>
   <Class Name="Strompi3Lib.UpsMonitor">
-    <Position X="4.5" Y="6.75" Width="2.75" />
+    <Position X="4" Y="9.75" Width="2.75" />
     <TypeIdentifier>
       <HashCode>CAAFDAAIAAAAAAAAAAAQIEAAAAEAAAAAEAAARAAAAAA=</HashCode>
       <FileName>UpsMonitor.cs</FileName>
@@ -69,21 +94,28 @@
     </ShowAsAssociation>
   </Class>
   <Class Name="Strompi3Lib.StromPi3Manager">
-    <Position X="0.5" Y="0.5" Width="3" />
+    <Position X="7.5" Y="6.5" Width="3" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAABIAQAAAAMEAAIAAAAAAAAAAAEAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAAAABIAQAAAAMEAAIAAAAAAACAAAEAAAA=</HashCode>
       <FileName>StromPi3Manager.cs</FileName>
     </TypeIdentifier>
   </Class>
+  <Class Name="Strompi3Lib.StartStopSettings">
+    <Position X="4" Y="6.75" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAQAAAAAAABAsAAAAAAAAAAABgAAA=</HashCode>
+      <FileName>StartStopSettings.cs</FileName>
+    </TypeIdentifier>
+  </Class>
   <Interface Name="Strompi3Lib.IStromPi3">
-    <Position X="0.5" Y="3.25" Width="2.5" />
+    <Position X="0.5" Y="0.5" Width="2.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAIAAAACQAAEACAAAAAAAAAAAAAAAEAAAAAAAA=</HashCode>
       <FileName>IStromPi3.cs</FileName>
     </TypeIdentifier>
   </Interface>
   <Enum Name="Strompi3Lib.EUpsState">
-    <Position X="4.5" Y="10.75" Width="2" />
+    <Position X="0.5" Y="10.75" Width="2" />
     <TypeIdentifier>
       <HashCode>ACAAAAAAAAEAAAAASAAAAAAEAAAAAAAAAAAAAAAAQAA=</HashCode>
       <FileName>EUpsState.cs</FileName>

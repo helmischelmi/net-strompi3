@@ -34,26 +34,62 @@ public class StromPi3Manager
 
             stromPi3.ReceiveStatus();
 
-            Console.WriteLine(stromPi3.ToString()); ;
+            //Console.WriteLine(stromPi3.ToString()); ;
         }
     }
 
+    /// <summary>
+    /// Gets the current status of the StromPi3.
+    /// </summary>
+    /// <param name="expectedConfig"></param>
+    public static void GetStatusAndCompare(StromPi3 expectedConfig)
+    {
+        using (var spManager = new SerialPortManager())
+        {
+            spManager.Open();
+            var stromPi3 = new StromPi3(spManager);
+            stromPi3.ReceiveStatus();
+            Console.WriteLine(stromPi3.ToString());
+
+            // Compare the current configuration with the expected configuration
+
+            Console.WriteLine(stromPi3.Cfg.MatchesExpectedConfiguration(expectedConfig.Cfg)
+                ? "Current StromPi3 configuration matches the expected configuration."
+                : "Current StromPi3 configuration does NOT match the expected configuration.");
+
+            stromPi3.CheckSettings();
+        }
+    }
 
     public static async Task<StromPi3Configuration?> GetStatusAndMonitorPowerEventsAsync()
     {
         StromPi3Configuration? result = null;
 
-        var cts = new CancellationTokenSource();
-
         using (var spManager = new SerialPortManager())
         {
             spManager.Open();
             var stromPi3 = new StromPi3(spManager);
-            //result = stromPi3.ReceiveStatus();
+            result = stromPi3.ReceiveStatus();
 
             Console.WriteLine("Drücken Sie 'Q', um das Programm zu beenden.");
+            
+            var cts = new CancellationTokenSource();
 
-            Task<StromPi3Configuration> commandTask = null;
+            // Starte den Status-Task
+            var pollTask = Task.Run(async () =>
+            {
+                while (!cts.Token.IsCancellationRequested)
+                {
+                    // (Optional) Polling, falls wirklich gebraucht
+                    await Task.Delay(TimeSpan.FromMinutes(3), cts.Token);
+                    var status = stromPi3.ReceiveStatus();
+                    Console.WriteLine(status.ToString());
+                    Console.WriteLine("Drücken Sie 'Q', um das Programm zu beenden.");
+                }
+            }, cts.Token);
+
+
+            // Tastaturüberwachung im Hauptthread
             while (true)
             {
                 // Überprüfe, ob der Benutzer 'Q' drückt, um das Programm zu beenden
@@ -68,26 +104,14 @@ public class StromPi3Manager
                     }
                 }
 
-                // Starte den Task nur, wenn er noch nicht läuft oder bereits abgeschlossen ist.
-                if (commandTask == null || commandTask.IsCompleted)
-                {
-                    commandTask = ReceiveStatusAsync(stromPi3, cts.Token, 3);
-                    
-                    Console.WriteLine($"ReceiveStatusAsync wurde gestartet: {DateTime.Now:T}.");
-                    Console.WriteLine("Drücken Sie 'Q', um das Programm zu beenden.");                    
-                    
-                    result = commandTask.Result;
-                    Console.WriteLine($"Status {Environment.NewLine}:{result}");
-                }
+                await Task.Delay(200); // Kurze Pause, um CPU zu schonen
             }
+            
+            // Warten, bis Hintergrund-Task sauber beendet
+            await pollTask;
 
-            if (commandTask != null)
-            {
-                result = commandTask.Result;// Warte, bis der laufende Task beendet ist.
-            }
+            return result;
         }
-
-        return result;
     }
 
 
@@ -101,8 +125,8 @@ public class StromPi3Manager
         {
             spManager.Open();
             var stromPi3 = new StromPi3(spManager);
-           
-         Task<StromPi3Configuration> commandTask = null;
+
+            Task<StromPi3Configuration> commandTask = null;
             while (token.IsCancellationRequested == false)
             {
                 // Starte den Task nur, wenn er noch nicht läuft oder bereits abgeschlossen ist.

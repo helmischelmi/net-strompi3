@@ -5,10 +5,10 @@ namespace Strompi3Lib;
 
 public class StartStopSettings
 {
-    public bool PowerOnButtonEnable { get; private set; }
-    public int PowerOnButtonSeconds { get; private set; }
+    public bool PowerOnButtonEnable { get; internal set; }
+    public int PowerOnButtonSeconds { get; internal set; }
     public bool PowersaveEnable { get; set; }
-    public bool PoweroffMode { get; private set; }
+    public bool PowerOffMode { get; internal set; }
 
     public bool PoweroffTimeEnableMode { get; private set; }
     //public string WakeupTimerMinutes { get; private set; }
@@ -20,7 +20,7 @@ public class StartStopSettings
         PowerOnButtonEnable = ConverterHelper.EnabledDisabledConverter(sp3PowerOnButtonEnable, "sp3PowerOnButtonEnable");
         PowerOnButtonSeconds = Convert.ToInt32(sp3PowerOnButtonTime);
         PowersaveEnable = ConverterHelper.EnabledDisabledConverter(sp3PowersaveEnable, "sp3PowersaveEnable");
-        PoweroffMode = ConverterHelper.EnabledDisabledConverter(sp3PoweroffMode, "sp3PoweroffMode");
+        PowerOffMode = ConverterHelper.EnabledDisabledConverter(sp3PoweroffMode, "sp3PoweroffMode");
         PoweroffTimeEnableMode = ConverterHelper.EnabledDisabledConverter(poweroffTimeEnableMode, "poweroffTimeEnableMode");
     }
 
@@ -33,6 +33,6 @@ public class StartStopSettings
 
     public void SetPowerOffMode(in bool powerOffEnable)
     {
-        PoweroffMode = powerOffEnable;
+        PowerOffMode = powerOffEnable;
     }
 }

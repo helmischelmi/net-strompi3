@@ -20,7 +20,7 @@ public class BatteryHat
     /// <summary>
     /// a given battery charge level: when reached, a signal is fired to start the shutdown event 
     /// </summary>
-    public EBatteryShutdownLevel BatteryShutdownLevel { get; private set; }
+    public EBatteryShutdownLevel BatteryShutdownLevel { get; internal set; }
 
     /// <summary>
     /// 

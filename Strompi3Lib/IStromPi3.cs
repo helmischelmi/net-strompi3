@@ -2,7 +2,7 @@
 
 public interface IStromPi3
 {
-    UpsMonitor Monitor { get; }
+    UpsMonitor UpsMonitor { get; }
 
     /// <summary>
     /// Sends initilazize command to Strompi3, expects no answer
@@ -10,7 +10,7 @@ public interface IStromPi3
     /// <para>
     /// <remarks>Requires serial-mode</remarks>
     /// </para>
-    void Initialize();
+    void InitializePort();
 
     /// <summary>
     /// Reads the state and configuration of the StromPi3. 

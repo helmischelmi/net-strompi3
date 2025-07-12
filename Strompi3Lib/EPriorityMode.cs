@@ -5,7 +5,7 @@ namespace Strompi3Lib;
 /// <summary>
 /// 
 /// </summary>
-public enum EInputPriority
+public enum EPriorityMode
 {
     [Description("nothing")]
     nothing = 0,

@@ -24,21 +24,29 @@ public class StromPi3 : IStromPi3
     private const int ExpectedLinesReadStatus = 38;
 
     public StromPi3Configuration Cfg { get; private set; }
-    public UpsMonitor Monitor { get; }
+    public UpsMonitor UpsMonitor { get; }
 
 
     public StromPi3(SerialPortManager portManager, bool bSilent = false)
     {
         PortManager = portManager;
 
-        Monitor = new UpsMonitor(this);
+        UpsMonitor = new UpsMonitor(this);
 
         if (CheckSerialPortAvailability() == false)
         {
             throw new Exception("Serial port not available for Strompi3");
         }
+    }
 
-  
+    /// <summary>
+    /// Initializes a new instance (minimized) of the <see cref="StromPi3"/> class.
+    /// This contains only the configuration and no serial port manager.
+    /// </summary>
+
+    private StromPi3()
+    {
+        Cfg = new StromPi3Configuration();
     }
 
     /// <summary>
@@ -60,7 +68,7 @@ public class StromPi3 : IStromPi3
     /// <para>
     /// <remarks>Requires serial-mode</remarks>
     /// </para>
-    public void Initialize()
+    public void InitializePort()
     {
         string[] cmds = new string[] { "quit", "\r" };
         int[]? delays = new int[] { BreakShort, BreakLong };
@@ -73,7 +81,7 @@ public class StromPi3 : IStromPi3
     /// </summary>
     public StromPi3Configuration ReceiveStatus(bool bSilent = true)
     {
-        Initialize(); // send "quit" command to Strompi3
+        InitializePort(); // send "quit" command to Strompi3
 
         var configuration = new StromPi3Configuration();
 
@@ -149,13 +157,42 @@ public class StromPi3 : IStromPi3
         return configuration;
     }
 
+    public void CheckSettings(bool receiveNewStatus = false)
+    {
+        if (receiveNewStatus) ReceiveStatus();
+
+        if (!Cfg.PowerFailWarningEnable)
+        {
+            Console.WriteLine("***error: Polling PowerIsMissing will fail, because PowerFail Warning of Strompi3 is NOT enabled!");
+            UpsMonitor.SetState(EUpsState.InvalidSettings);
+        }
+
+        if ((int)Cfg.BatteryHat.Level <= (int)Cfg.BatteryHat.BatteryShutdownLevel)
+        {
+            Console.WriteLine("***error: Polling PowerIsMissing will fail, because Battery Level is already too low!");
+            UpsMonitor.SetState(EUpsState.BatteryLevelBelowMinimum);
+        }
+
+
+        if (Cfg.ShutdownSeconds < 10)  // set min. 10 secs
+        {
+            Cfg.GetShutDown(Cfg.ShutdownEnable.ToNumber().ToString(),
+                10, (int)Cfg.BatteryHat.BatteryShutdownLevel);
+            Console.WriteLine("***warning: Set ShutdownSeconds to 10 secs!");
+        }
+
+        if (Cfg.FirmwareVersion != "v1.8")
+        {
+            Console.WriteLine("***error: firmware should be updated to v1.8!");
+        }
+    }
 
     /// <summary>
     /// Updates the configuration of the Strompi3.
     /// </summary>
     public void UpdateCompleteConfiguration()
     {
-        Initialize(); // send "quit" command to Strompi3
+        InitializePort(); // send "quit" command to Strompi3
 
         Console.WriteLine("Update complete Configuration");
 
@@ -177,9 +214,9 @@ public class StromPi3 : IStromPi3
     /// </summary>
     private void UpdateInputPriorityMode(bool sendToStromPi3 = false)
     {
-        Console.WriteLine($"1. Current Input-Priority-Mode: ({(int)Cfg.PriorityMode}) = {ConverterHelper.GetEnumDescription(Cfg.PriorityMode)}");
+        Console.WriteLine($"1. Current Input-Priority-Mode: ({(int)Cfg.PriorityModeMode}) = {ConverterHelper.GetEnumDescription(Cfg.PriorityModeMode)}");
 
-        foreach (EInputPriority priority in (EInputPriority[])Enum.GetValues(typeof(EInputPriority)))
+        foreach (EPriorityMode priority in (EPriorityMode[])Enum.GetValues(typeof(EPriorityMode)))
         {
             Console.WriteLine($"Mode  {(int)priority}: {ConverterHelper.GetEnumDescription(priority)}");
         }
@@ -187,13 +224,13 @@ public class StromPi3 : IStromPi3
         Cfg.GetInputPriorityMode(ConverterHelper.ReadInt(1, 6, "Mode: 1 - 6").ToString());
 
         Console.WriteLine(
-            $"Set Input Priority to {(int)Cfg.PriorityMode}) = {ConverterHelper.GetEnumDescription(Cfg.PriorityMode)}");
+            $"Set Input Priority to {(int)Cfg.PriorityModeMode}) = {ConverterHelper.GetEnumDescription(Cfg.PriorityModeMode)}");
         Console.WriteLine("-------------------------------");
         Console.WriteLine();
 
         if (sendToStromPi3)
         {
-            SendConfigElement(EConfigElement.InputPriority, (int)Cfg.PriorityMode);
+            SendConfigElement(EConfigElement.InputPriority, (int)Cfg.PriorityModeMode);
             SendConfigElement(EConfigElement.ModusReset, 1);
         }
     }
@@ -591,14 +628,14 @@ public class StromPi3 : IStromPi3
 
         if (powerOnButtonEnable && Cfg.ShutdownEnable)
         {
-            Console.WriteLine($"Current Poweroff-Mode Enable: ({Cfg.StartStopSettings.PoweroffMode}) ");
+            Console.WriteLine($"Current Poweroff-Mode Enable: ({Cfg.StartStopSettings.PowerOffMode}) ");
             Cfg.StartStopSettings.SetPowerOffMode(ConverterHelper.ReadInt(0, 1, "Set: 0 = False, 1 = True")
                 .ToBool());
         }
 
         Console.WriteLine($"Set Power-ON-Button to ({Cfg.StartStopSettings.PowerOnButtonEnable})");
         Console.WriteLine($"Set Power-ON-Button-Timer to ({Cfg.StartStopSettings.PowerOnButtonSeconds})");
-        Console.WriteLine($"Set Poweroff-Mode to ({Cfg.StartStopSettings.PoweroffMode})");
+        Console.WriteLine($"Set Poweroff-Mode to ({Cfg.StartStopSettings.PowerOffMode})");
         Console.WriteLine("-------------------------------");
         Console.WriteLine();
 
@@ -606,7 +643,7 @@ public class StromPi3 : IStromPi3
         {
             SendConfigElement(EConfigElement.PowerOnButtonEnable, Cfg.StartStopSettings.PowerOnButtonEnable.ToNumber());
             SendConfigElement(EConfigElement.PowerOnButtonTime, Cfg.StartStopSettings.PowerOnButtonSeconds);
-            SendConfigElement(EConfigElement.PowerOffMode, Cfg.StartStopSettings.PoweroffMode.ToNumber());
+            SendConfigElement(EConfigElement.PowerOffMode, Cfg.StartStopSettings.PowerOffMode.ToNumber());
         }
     }
 
@@ -637,7 +674,7 @@ public class StromPi3 : IStromPi3
     /// </summary>
     public void SendConfiguration()
     {
-        SendConfigElement(EConfigElement.InputPriority, (int)Cfg.PriorityMode);
+        SendConfigElement(EConfigElement.InputPriority, (int)Cfg.PriorityModeMode);
 
         switch (Cfg.AlarmSettings.Mode)
         {
@@ -696,7 +733,7 @@ public class StromPi3 : IStromPi3
         SendConfigElement(EConfigElement.PowerSaveEnable, Cfg.StartStopSettings.PowersaveEnable.ToNumber());
 
 
-        SendConfigElement(EConfigElement.PowerOffMode, Cfg.StartStopSettings.PoweroffMode.ToNumber());
+        SendConfigElement(EConfigElement.PowerOffMode, Cfg.StartStopSettings.PowerOffMode.ToNumber());
         SendConfigElement(EConfigElement.PowerOffTimer, Cfg.AlarmSettings.WakeupTimerMinutes);
         SendConfigElement(EConfigElement.WakeupWeekendEnable, Cfg.AlarmSettings.WakeUpWeekendEnable.ToNumber());
 
@@ -760,7 +797,7 @@ public class StromPi3 : IStromPi3
     /// </summary>
     public void SyncRtc()
     {
-        Initialize(); // send "quit" command to Strompi3
+        InitializePort(); // send "quit" command to Strompi3
 
         Console.WriteLine("TimeSync-Process | Please Wait");
         Console.WriteLine($"StromPi3: Current dateTime {Cfg.CurrentDateTime} ");
@@ -824,5 +861,53 @@ public class StromPi3 : IStromPi3
     public override string ToString()
     {
         return Cfg.ToString();
+    }
+
+
+
+    /// <summary>
+    /// Creates a predefined <see cref="StromPi3"/> configuration with expected values for the BE102-config.
+    /// </summary>
+    /// <returns>A <see cref="StromPi3"/> instance representing the expected configuration for the BE102-config.</returns>
+    public static StromPi3 CreateExpectedConfigForBe102Manually()
+    {
+        var result = new StromPi3
+        {
+            Cfg =
+            {
+                SerialLessEnable = false,
+                PriorityModeMode = EPriorityMode.Wide_mUSB_Battery,
+                ShutdownEnable = true,
+                ShutdownSeconds = 600,
+                PowerFailWarningEnable = true,
+                BatteryHat =
+                {
+                    BatteryShutdownLevel = EBatteryShutdownLevel.QuarterLeft
+                },
+                AlarmSettings =
+                {
+                    WakeupEnable = false,
+                    WakeUpHour = 0,
+                    WakeUpMinute = 0,
+                    WakeUpDay = 1,
+                    WakeUpMonth = 1,
+                    WakeUpWeekday = EWeekday.Monday,
+                    Mode = EAlarmMode.TimeAlarm,
+                    IntervalAlarmEnable = false,
+                    WakeUpWeekendEnable =true,
+                    WakeupTimerMinutes = 30,
+                },
+                StartStopSettings =
+                {
+                    PowerOnButtonEnable = true,
+                    PowerOnButtonSeconds = 30,
+                    PowerOffMode = true,
+                    PowersaveEnable = false
+                }
+            }
+        };
+
+
+        return result;
     }
 }
