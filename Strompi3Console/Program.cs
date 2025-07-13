@@ -124,7 +124,7 @@ public class Program
                         ShowTitleInteractive(SubTitle, "Get Status and Monitor Power Events (SERIAL)");
                         Console.WriteLine();
                         Console.WriteLine();
-                        var status = await StromPi3Manager.GetStatusAndMonitorPowerEventsAsync();
+                        var status = await StromPi3Manager.GetStatusAndMonitorPowerChangeEventsAsync();
                         Console.WriteLine(status.ToString());
                         break;
 

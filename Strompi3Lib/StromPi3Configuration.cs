@@ -150,91 +150,91 @@ public class StromPi3Configuration
 
         if (SerialLessEnable != expectedConfig.SerialLessEnable)
         {
-            misMatches.Add($"SerialLessEnable: {SerialLessEnable} != {expectedConfig.SerialLessEnable}");
+            misMatches.Add($"SerialLessEnable: {SerialLessEnable} != {expectedConfig.SerialLessEnable} (expected)");
         }
 
         if (PriorityModeMode != expectedConfig.PriorityModeMode)
         {
-            misMatches.Add($"PriorityModeMode: {PriorityModeMode} != {expectedConfig.PriorityModeMode}");
+            misMatches.Add($"PriorityModeMode: {PriorityModeMode} != {expectedConfig.PriorityModeMode} (expected)");
         }
 
         if (ShutdownEnable != expectedConfig.ShutdownEnable)
         {
-            misMatches.Add($"ShutdownEnable: {ShutdownEnable} != {expectedConfig.ShutdownEnable}");
+            misMatches.Add($"ShutdownEnable: {ShutdownEnable} != {expectedConfig.ShutdownEnable} (expected)");
         }
         if (ShutdownSeconds != expectedConfig.ShutdownSeconds)
         {
-            misMatches.Add($"ShutdownSeconds: {ShutdownSeconds} != {expectedConfig.ShutdownSeconds}");
+            misMatches.Add($"ShutdownSeconds: {ShutdownSeconds} != {expectedConfig.ShutdownSeconds} (expected)");
         }
         if (PowerFailWarningEnable != expectedConfig.PowerFailWarningEnable)
         {
-            misMatches.Add($"PowerFailWarningEnable: {PowerFailWarningEnable} != {expectedConfig.PowerFailWarningEnable}");
+            misMatches.Add($"PowerFailWarningEnable: {PowerFailWarningEnable} != {expectedConfig.PowerFailWarningEnable}  (expected)");
         }
         if (BatteryHat.BatteryShutdownLevel != expectedConfig.BatteryHat.BatteryShutdownLevel)
         {
-            misMatches.Add($"BatteryHat.BatteryShutdownLevel: {BatteryHat.BatteryShutdownLevel} != {expectedConfig.BatteryHat.BatteryShutdownLevel}");
+            misMatches.Add($"BatteryHat.BatteryShutdownLevel: {BatteryHat.BatteryShutdownLevel} != {expectedConfig.BatteryHat.BatteryShutdownLevel} (expected)");
         }
 
         if (AlarmSettings.WakeupEnable != expectedConfig.AlarmSettings.WakeupEnable)
         {
-            misMatches.Add($"AlarmSettings.WakeupEnable: {AlarmSettings.WakeupEnable} != {expectedConfig.AlarmSettings.WakeupEnable}");
+            misMatches.Add($"AlarmSettings.WakeupEnable: {AlarmSettings.WakeupEnable} != {expectedConfig.AlarmSettings.WakeupEnable} (expected)");
         }
         if (AlarmSettings.WakeUpHour != expectedConfig.AlarmSettings.WakeUpHour)
         {
-            misMatches.Add($"AlarmSettings.WakeUpHour: {AlarmSettings.WakeUpHour} != {expectedConfig.AlarmSettings.WakeUpHour}");
+            misMatches.Add($"AlarmSettings.WakeUpHour: {AlarmSettings.WakeUpHour} != {expectedConfig.AlarmSettings.WakeUpHour} (expected)");
         }
         if (AlarmSettings.WakeUpMinute != expectedConfig.AlarmSettings.WakeUpMinute)
         {
-            misMatches.Add($"AlarmSettings.WakeUpMinute: {AlarmSettings.WakeUpMinute} != {expectedConfig.AlarmSettings.WakeUpMinute}");
+            misMatches.Add($"AlarmSettings.WakeUpMinute: {AlarmSettings.WakeUpMinute} != {expectedConfig.AlarmSettings.WakeUpMinute} (expected)");
         }
         if (AlarmSettings.WakeUpDay != expectedConfig.AlarmSettings.WakeUpDay)
         {
-            misMatches.Add($"AlarmSettings.WakeUpDay: {AlarmSettings.WakeUpDay} != {expectedConfig.AlarmSettings.WakeUpDay}");
+            misMatches.Add($"AlarmSettings.WakeUpDay: {AlarmSettings.WakeUpDay} != {expectedConfig.AlarmSettings.WakeUpDay} (expected)");
         }
         if (AlarmSettings.WakeUpMonth != expectedConfig.AlarmSettings.WakeUpMonth)
         {
-            misMatches.Add($"AlarmSettings.WakeUpMonth: {AlarmSettings.WakeUpMonth} != {expectedConfig.AlarmSettings.WakeUpMonth}");
+            misMatches.Add($"AlarmSettings.WakeUpMonth: {AlarmSettings.WakeUpMonth} != {expectedConfig.AlarmSettings.WakeUpMonth} (expected)");
         }
         if (AlarmSettings.WakeUpWeekday != expectedConfig.AlarmSettings.WakeUpWeekday)
         {
-            misMatches.Add($"AlarmSettings.WakeUpWeekday: {AlarmSettings.WakeUpWeekday} != {expectedConfig.AlarmSettings.WakeUpWeekday}");
+            misMatches.Add($"AlarmSettings.WakeUpWeekday: {AlarmSettings.WakeUpWeekday} != {expectedConfig.AlarmSettings.WakeUpWeekday} (expected)");
         }
         if (AlarmSettings.Mode != expectedConfig.AlarmSettings.Mode)
         {
-            misMatches.Add($"AlarmSettings.Mode: {AlarmSettings.Mode} != {expectedConfig.AlarmSettings.Mode}");
+            misMatches.Add($"AlarmSettings.Mode: {AlarmSettings.Mode} != {expectedConfig.AlarmSettings.Mode} (expected)");
         }
         if (AlarmSettings.IntervalAlarmEnable != expectedConfig.AlarmSettings.IntervalAlarmEnable)
         {
-            misMatches.Add($"AlarmSettings.IntervalAlarmEnable: {AlarmSettings.IntervalAlarmEnable} != {expectedConfig.AlarmSettings.IntervalAlarmEnable}");
+            misMatches.Add($"AlarmSettings.IntervalAlarmEnable: {AlarmSettings.IntervalAlarmEnable} != {expectedConfig.AlarmSettings.IntervalAlarmEnable} (expected)");
         }
         if (AlarmSettings.WakeupTimerMinutes != expectedConfig.AlarmSettings.WakeupTimerMinutes)
         {
-            misMatches.Add($"AlarmSettings.WakeupTimerMinutes: {AlarmSettings.WakeupTimerMinutes} != {expectedConfig.AlarmSettings.WakeupTimerMinutes}");
+            misMatches.Add($"AlarmSettings.WakeupTimerMinutes: {AlarmSettings.WakeupTimerMinutes} != {expectedConfig.AlarmSettings.WakeupTimerMinutes}  (expected)");
         }
 
         if (AlarmSettings.WakeUpWeekendEnable != expectedConfig.AlarmSettings.WakeUpWeekendEnable)
         {
-            misMatches.Add($"AlarmSettings.WakeUpWeekendEnable: {AlarmSettings.WakeUpWeekendEnable} != {expectedConfig.AlarmSettings.WakeUpWeekendEnable}");
+            misMatches.Add($"AlarmSettings.WakeUpWeekendEnable: {AlarmSettings.WakeUpWeekendEnable} != {expectedConfig.AlarmSettings.WakeUpWeekendEnable}  (expected)");
         }
 
         if (StartStopSettings.PowerOnButtonEnable != expectedConfig.StartStopSettings.PowerOnButtonEnable)
         {
-            misMatches.Add($"StartStopSettings.PowerOnButtonEnable: {StartStopSettings.PowerOnButtonEnable} != {expectedConfig.StartStopSettings.PowerOnButtonEnable}");
+            misMatches.Add($"StartStopSettings.PowerOnButtonEnable: {StartStopSettings.PowerOnButtonEnable} != {expectedConfig.StartStopSettings.PowerOnButtonEnable} (expected)");
         }
 
         if (StartStopSettings.PowerOnButtonSeconds != expectedConfig.StartStopSettings.PowerOnButtonSeconds)
         {
-            misMatches.Add($"StartStopSettings.PowerOnButtonSeconds: {StartStopSettings.PowerOnButtonSeconds} != {expectedConfig.StartStopSettings.PowerOnButtonSeconds}");
+            misMatches.Add($"StartStopSettings.PowerOnButtonSeconds: {StartStopSettings.PowerOnButtonSeconds} != {expectedConfig.StartStopSettings.PowerOnButtonSeconds}  (expected)");
         }
 
         if (StartStopSettings.PowerOffMode != expectedConfig.StartStopSettings.PowerOffMode)
         {
-            misMatches.Add($"StartStopSettings.PowerOffMode: {StartStopSettings.PowerOffMode} != {expectedConfig.StartStopSettings.PowerOffMode}");
+            misMatches.Add($"StartStopSettings.PowerOffMode: {StartStopSettings.PowerOffMode} != {expectedConfig.StartStopSettings.PowerOffMode} (expected)");
         }
 
         if (StartStopSettings.PowersaveEnable != expectedConfig.StartStopSettings.PowersaveEnable)
         {
-            misMatches.Add($"StartStopSettings.PowersaveEnable: {StartStopSettings.PowersaveEnable} != {expectedConfig.StartStopSettings.PowersaveEnable}");
+            misMatches.Add($"StartStopSettings.PowersaveEnable: {StartStopSettings.PowersaveEnable} != {expectedConfig.StartStopSettings.PowersaveEnable} (expected)");
         }
 
         Console.WriteLine();

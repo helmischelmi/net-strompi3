@@ -159,10 +159,10 @@ public class SerialPortManager : IDisposable
     }
 
 
-    public string SendCommand(string command, bool expectResponse, int expectedResponseLines)
-    {
-        return SendCommand(new string[] { command }, null, expectResponse, expectedResponseLines);
-    }
+    //public string SendCommand(string command, bool expectResponse, int expectedResponseLines)
+    //{
+    //    return SendCommand(new string[] { command }, null, expectResponse, expectedResponseLines);
+    //}
 
 
     /// <summary>
@@ -230,20 +230,20 @@ public class SerialPortManager : IDisposable
     /// Reads a response string from the Strompi3 device.
     /// </summary>
     /// <returns>A string representing the response from the device.</returns>
-    public string ReadLine()
-    {
-        try
-        {
-            string response = _serialPort.ReadLine();
-            Console.WriteLine("Response received: " + response);
-            return response;
-        }
-        catch (TimeoutException ex)
-        {
-            Console.WriteLine($"Timeout occurred while reading from the serial port: {ex.Message}");
-            return "Timeout";
-        }
-    }
+    //public string ReadLine()
+    //{
+    //    try
+    //    {
+    //        string response = _serialPort.ReadLine();
+    //        Console.WriteLine("Response received: " + response);
+    //        return response;
+    //    }
+    //    catch (TimeoutException ex)
+    //    {
+    //        Console.WriteLine($"Timeout occurred while reading from the serial port: {ex.Message}");
+    //        return "Timeout";
+    //    }
+    //}
 
 
 

@@ -49,7 +49,7 @@ public class UpsMonitor
     {
         Console.WriteLine(" - OnPowerFailure erkannt");
         SetState(EUpsState.PowerIsMissing);
-        StartShutdownCountdown();
+        PerformCountdownToShutdown();
     }
 
     private void HandleShutDown()
@@ -77,7 +77,7 @@ public class UpsMonitor
     }
 
 
-    private void StartShutdownCountdown()
+    private void PerformCountdownToShutdown()
     {
         Console.WriteLine($"STATE Power is Missing");
         Console.WriteLine($"Countdown is enabled  : {_strompi3.Cfg.ShutdownEnable}");
@@ -97,8 +97,7 @@ public class UpsMonitor
 
         if (State == EUpsState.PowerIsMissing)
         {
-            // Countdown abgelaufen, Shutdown starten
-            PerformShutdown();
+            PerformShutdown();// Countdown abgelaufen, Shutdown starten
         }
         else
         {
@@ -121,8 +120,8 @@ public class UpsMonitor
 
         SmtpMailer.SendEmail(SmtpConfiguration.GetDefaultConfiguration(), "LurchCam shuts down", $"Got ShutDown-Signal from StromPi3 at {DateTime.Now.ToLongTimeString()}!");
         
-        Task.Delay(20000).Wait();
-        //Os.ShutDown();
+        Task.Delay(2000).Wait();
+        Os.ShutDown();
     }
 
 

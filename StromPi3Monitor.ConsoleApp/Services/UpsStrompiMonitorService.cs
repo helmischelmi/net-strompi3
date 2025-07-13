@@ -21,7 +21,7 @@ public class UpsStrompiMonitorService:IUpsStrompiMonitor
     {
         while (!token.IsCancellationRequested)
         {
-            var status = await StromPi3Manager.GetStatusAndMonitorPowerEventsAsync();
+            var status = await StromPi3Manager.GetStatusAndMonitorPowerChangeEventsAsync();
 
             Console.WriteLine($"Strompi3 has status = {Environment.NewLine} {status}");
 

@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Iot.Device.RotaryEncoder;
 using Pi.Common;
-using Strompi3Lib.Common;
 using Strompi3Lib.serialPort;
 
 namespace Strompi3Lib;
@@ -34,7 +32,7 @@ public class StromPi3Manager
 
             stromPi3.ReceiveStatus();
 
-            //Console.WriteLine(stromPi3.ToString()); ;
+            stromPi3.ToString();
         }
     }
 
@@ -61,7 +59,7 @@ public class StromPi3Manager
         }
     }
 
-    public static async Task<StromPi3Configuration?> GetStatusAndMonitorPowerEventsAsync()
+    public static async Task<StromPi3Configuration?> GetStatusAndMonitorPowerChangeEventsAsync()
     {
         StromPi3Configuration? result = null;
 
@@ -72,10 +70,10 @@ public class StromPi3Manager
             result = stromPi3.ReceiveStatus();
 
             Console.WriteLine("Drücken Sie 'Q', um das Programm zu beenden.");
-            
+
             var cts = new CancellationTokenSource();
 
-            // Starte den Status-Task
+            // Receice status every 3 minutes in a background task
             var pollTask = Task.Run(async () =>
             {
                 while (!cts.Token.IsCancellationRequested)
@@ -83,12 +81,11 @@ public class StromPi3Manager
                     // (Optional) Polling, falls wirklich gebraucht
                     await Task.Delay(TimeSpan.FromMinutes(3), cts.Token);
                     var status = stromPi3.ReceiveStatus();
-                    Console.WriteLine(status.ToString());
+                    status.ToString();
                     Console.WriteLine("Drücken Sie 'Q', um das Programm zu beenden.");
                 }
             }, cts.Token);
-
-
+            
             // Tastaturüberwachung im Hauptthread
             while (true)
             {
@@ -103,86 +100,16 @@ public class StromPi3Manager
                         break;
                     }
                 }
-
                 await Task.Delay(200); // Kurze Pause, um CPU zu schonen
             }
-            
-            // Warten, bis Hintergrund-Task sauber beendet
-            await pollTask;
+
+            await pollTask; // Warten, bis Hintergrund-Task sauber beendet
 
             return result;
         }
     }
 
 
-    public static async Task<StromPi3Configuration?> GetStatusAndMonitorPowerEventsAsync(CancellationToken token)
-    {
-        StromPi3Configuration? result = null;
-
-        var cts = new CancellationTokenSource();
-
-        using (var spManager = new SerialPortManager())
-        {
-            spManager.Open();
-            var stromPi3 = new StromPi3(spManager);
-
-            Task<StromPi3Configuration> commandTask = null;
-            while (token.IsCancellationRequested == false)
-            {
-                // Starte den Task nur, wenn er noch nicht läuft oder bereits abgeschlossen ist.
-                if (commandTask == null || commandTask.IsCompleted)
-                {
-                    commandTask = ReceiveStatusAsync(stromPi3, cts.Token, 3);
-
-                    result = commandTask.Result;
-
-                    Console.WriteLine($"ReceiveStatusAsync wurde gestartet: {DateTime.Now:T}.");
-                }
-            }
-
-            if (commandTask != null)
-            {
-                result = commandTask.Result;// Warte, bis der laufende Task beendet ist.
-            }
-        }
-
-        return result;
-    }
-
-    /// <summary>
-    /// Receives the status of the StromPi3 and prints it to the console.
-    /// if forcedDelayInMinutes > 0, it waits for the specified time before returning.
-    /// </summary>
-    /// <param name="stromPi3"></param>
-    /// <param name="token"></param>
-    /// <param name="forcedDelayInMinutes"></param>
-    /// <returns></returns>
-    static async Task<StromPi3Configuration> ReceiveStatusAsync(StromPi3 stromPi3, CancellationToken token, int forcedDelayInMinutes = 0)
-    {
-        var status = stromPi3.ReceiveStatus();
-
-        Console.WriteLine(stromPi3.ToString());
-
-        if (forcedDelayInMinutes > 0)
-        {
-            try
-            {
-                // Warte <forcedDelayInMinutes> Minuten, aber breche den Delay ab, wenn cts.Cancel ausgelöst wird.
-                await Task.Delay(TimeSpan.FromMinutes(forcedDelayInMinutes), token);
-            }
-            catch (TaskCanceledException)
-            {
-                Console.WriteLine("Delay wurde abgebrochen.");
-            }
-        }
-
-        //await Task.CompletedTask;
-        return status;
-    }
-
-    /// <summary>
-    /// 
-    /// </summary>
     public static void MonitorPowerChangeEvents()
     {
         using (var spManager = new SerialPortManager())
@@ -191,38 +118,25 @@ public class StromPi3Manager
             var stromPi3 = new StromPi3(spManager);
 
             stromPi3.ReceiveStatus();
-            Console.WriteLine(stromPi3.ToString()); ;
+            stromPi3.ToString();
 
-            // Keep-Alive-Thread starten
-            Console.WriteLine("Monitoring started. Press any key, to end.");
-            MonitorPowerChangeEventsAsync().GetAwaiter().GetResult();
-        }
-    }
+            Console.WriteLine("\"Monitoring started. Press Q or q any key, to end.");
 
-    /// <summary>
-    /// Keep-Alive-Thread, that allows monitors StromPi3 power changes until a key is pressed.
-    /// </summary>
-    /// <returns></returns>
-    private static async Task MonitorPowerChangeEventsAsync()
-    {
-        Console.WriteLine("Monitoring gestartet. Drücken Sie eine beliebige Taste, um zu beenden.");
-
-        CancellationTokenSource cts = new CancellationTokenSource();
-
-        Task monitoringTask = Task.Run(async () =>
-        {
-            while (!cts.Token.IsCancellationRequested)
+            // Endlos-Schleife, die das Programm am Leben hält
+            while (true)
             {
-                await Task.Delay(2000, cts.Token);
+                if (Console.KeyAvailable)
+                {
+                    var key = Console.ReadKey(true);
+                    if (key.KeyChar == 'Q' || key.KeyChar == 'q')
+                    {
+                        Console.WriteLine($"Q pressed at {DateTime.Now:T} – Monitoring ended.");
+                        break;
+                    }
+                }
+                Thread.Sleep(200); // CPU schonen, 200 ms Pause
             }
-        }, cts.Token);
-
-        await Task.Run(() => Console.ReadKey(true));
-        cts.Cancel();
-
-        await monitoringTask;
-
-        Console.WriteLine("Monitoring beendet.");
+        }
     }
 
 
