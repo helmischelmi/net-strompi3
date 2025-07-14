@@ -84,6 +84,9 @@ public class UpsMonitor
         Console.WriteLine($"Failure counter is    : {_strompi3.Cfg.PowerFailureCounter}");
         Console.WriteLine($"Countdown to shutdown : {_strompi3.Cfg.ShutdownSeconds} seconds");
 
+        SmtpMailer.SendEmail(SmtpConfiguration.GetDefaultConfiguration(), "LurchiCam PowerFailure", $"Got PowerFailure-Signal from StromPi3 and start countdown to shutdown at {DateTime.Now.ToLongTimeString()}!");
+
+
         PowerFailureStart = DateTime.Now;
         int secondsToShutdown = _strompi3.Cfg.ShutdownSeconds;
 
@@ -118,7 +121,7 @@ public class UpsMonitor
 
         Console.WriteLine($"SET Shutdown at {DateTime.Now.ToLongTimeString()}");
 
-        SmtpMailer.SendEmail(SmtpConfiguration.GetDefaultConfiguration(), "LurchCam shuts down", $"Got ShutDown-Signal from StromPi3 at {DateTime.Now.ToLongTimeString()}!");
+        SmtpMailer.SendEmail(SmtpConfiguration.GetDefaultConfiguration(), "LurchiCam shuts down", $"Got ShutDown-Signal from StromPi3 at {DateTime.Now.ToLongTimeString()}!");
         
         Task.Delay(2000).Wait();
         Os.ShutDown();
