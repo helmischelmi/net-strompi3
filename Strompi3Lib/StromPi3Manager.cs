@@ -17,7 +17,7 @@ namespace Strompi3Lib;
 /// power-save mode.
 /// 
 /// </summary>
-public class StromPi3Manager
+public static class StromPi3Manager
 {
 
     /// <summary>
@@ -85,7 +85,7 @@ public class StromPi3Manager
                     Console.WriteLine("Drücken Sie 'Q', um das Programm zu beenden.");
                 }
             }, cts.Token);
-            
+
             // Tastaturüberwachung im Hauptthread
             while (true)
             {
@@ -204,7 +204,7 @@ public class StromPi3Manager
     public static void SendConfiguration()
     {
         var isSerialPortConfiguredToUseStromPi3 = Os.IsSerialConsoleDeactivatedAndSerialPortActive(true);
-        var isPortAvailable = Os.ShowAvailableSerialPorts("tty", true);
+        var isPortAvailable = Os.HasSerialPort("tty", true);
 
         if (isSerialPortConfiguredToUseStromPi3 == false || isPortAvailable == false)
         {
@@ -224,6 +224,22 @@ public class StromPi3Manager
             stromPi3.SendConfiguration();
 
             Console.WriteLine("Configuration transferred successfully.");
+        }
+    }
+
+    public static EConnectionState CheckConnection()
+    {
+        using (var spManager = new SerialPortManager())
+        {
+            spManager.Open();
+
+            var stromPi3 = new StromPi3(spManager);
+
+            var connectionState = stromPi3.ConnectionState;
+            
+            Console.WriteLine($"ConnectionState is {connectionState}.");
+
+            return connectionState;
         }
     }
 }

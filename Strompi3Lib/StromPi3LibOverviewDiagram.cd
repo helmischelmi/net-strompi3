@@ -8,20 +8,35 @@
     <AssociationLine Name="Cfg" Type="Strompi3Lib.StromPi3Configuration" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
       <Path>
         <Point X="2" Y="3.25" />
-        <Point X="2" Y="3.188" />
-        <Point X="3.562" Y="3.188" />
-        <Point X="3.562" Y="5.688" />
-        <Point X="4" Y="5.688" />
+        <Point X="2" Y="3.094" />
+        <Point X="3.562" Y="3.094" />
+        <Point X="3.562" Y="5.938" />
+        <Point X="4" Y="5.938" />
       </Path>
       <MemberNameLabel ManuallyPlaced="true" ManuallySized="true">
-        <Position X="0.568" Y="2.55" Height="0.182" Width="0.576" />
+        <Position X="0.068" Y="2.696" Height="0.182" Width="0.576" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <AssociationLine Name="PortManager" Type="Strompi3Lib.serialPort.SerialPortManager" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="1.75" Y="3.25" />
+        <Point X="1.75" Y="3.011" />
+        <Point X="3.562" Y="3.011" />
+        <Point X="3.562" Y="0.688" />
+        <Point X="7.406" Y="0.688" />
+        <Point X="7.406" Y="3.422" />
+        <Point X="7.5" Y="3.422" />
+      </Path>
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="2.329" Y="2.768" />
       </MemberNameLabel>
     </AssociationLine>
     <TypeIdentifier>
-      <HashCode>AAAQAEAIEDAACAQEGAASAUCAAAMCAAAAAGFAQgBAAEA=</HashCode>
+      <HashCode>AAAQAEAIEDAACAQEGAASAUCAAAMCAAAAAGFAQgBAAEE=</HashCode>
       <FileName>StromPi3.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
+      <Field Name="PortManager" />
       <Property Name="Cfg" />
     </ShowAsAssociation>
     <Lollipop Position="0.2" />
@@ -64,7 +79,7 @@
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="Strompi3Lib.StromPi3Configuration">
-    <Position X="4" Y="0.5" Width="2.75" />
+    <Position X="4" Y="0.75" Width="2.75" />
     <TypeIdentifier>
       <HashCode>AgAgAgAgAAIQAAAEAgAAIAAAKACgAACURAABAEAgCMA=</HashCode>
       <FileName>StromPi3Configuration.cs</FileName>
@@ -76,7 +91,7 @@
   <Class Name="Strompi3Lib.UpsMonitor">
     <Position X="4" Y="9.75" Width="2.75" />
     <TypeIdentifier>
-      <HashCode>AAABDAAAAAAAAAAAAAAQAAAEAAEAAAQAEAAgRAAAAIA=</HashCode>
+      <HashCode>AAABDAAAAAAAAAAAAAAQAAAAAAEAAAQAEAAgRAAAAIE=</HashCode>
       <FileName>UpsMonitor.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
@@ -86,7 +101,7 @@
   <Class Name="Strompi3Lib.StromPi3Manager">
     <Position X="7.5" Y="6.5" Width="3" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAABAAQAAAAEEAAIAAAAAAACAAAEAAAA=</HashCode>
+      <HashCode>AAEAAAAAAAAAAABAAQAAAAEEAAIAAAAAQACAAAAAAAA=</HashCode>
       <FileName>StromPi3Manager.cs</FileName>
     </TypeIdentifier>
   </Class>

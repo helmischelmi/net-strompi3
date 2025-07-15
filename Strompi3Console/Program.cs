@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using Pi.Common;
 using Pi.Common.utils;
 using Strompi3Lib;
-using Strompi3Lib.Common;
 
 namespace Strompi3Console;
 
@@ -41,7 +40,7 @@ public class Program
                 Console.SetCursorPosition(10, 12);
                 Console.Write("Select:");
                 Console.SetCursorPosition(10, 14);
-                Console.Write("  1  -> Show serial ports on Raspberry");
+                Console.Write("  1  -> Check Connection of StromPi3");
                 Console.SetCursorPosition(10, 15);
                 Console.Write("  2  -> Get Strompi3 Configuration");
                 Console.SetCursorPosition(10, 16);
@@ -69,11 +68,10 @@ public class Program
                 {
                     case ConsoleKey.D1:
                     case ConsoleKey.NumPad1:
-                        ShowTitleInteractive(SubTitle, "Read available ports:");
+                        ShowTitleInteractive(SubTitle, "Check Connection of StromPi3:");
                         Console.WriteLine();
                         Console.WriteLine();
-                        Os.IsSerialConsoleDeactivatedAndSerialPortActive();
-                        Os.ShowAvailableSerialPorts("tty");
+                        StromPi3Manager.CheckConnection();
                         break;
 
                     case ConsoleKey.D2:

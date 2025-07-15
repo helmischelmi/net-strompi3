@@ -26,6 +26,16 @@ public class StromPi3 : IStromPi3
     public StromPi3Configuration Cfg { get; private set; }
     public UpsMonitor UpsMonitor { get; }
 
+    public EConnectionState ConnectionState
+    {
+        get
+        {
+            return Os.IsSerialConsoleDeactivatedAndSerialPortActive() && Os.HasSerialPort("tty")
+                ? EConnectionState.UART_Connected
+                : EConnectionState.UART_NotConnected;
+        }
+    }
+
 
     public StromPi3(SerialPortManager portManager, bool bSilent = false)
     {
@@ -38,6 +48,8 @@ public class StromPi3 : IStromPi3
             throw new Exception("Serial port not available for Strompi3");
         }
     }
+
+
 
     /// <summary>
     /// Initializes a new instance (minimized) of the <see cref="StromPi3"/> class.
@@ -56,14 +68,14 @@ public class StromPi3 : IStromPi3
     private bool CheckSerialPortAvailability()
     {
         var isSerialPortConfiguredToUseStromPi3 = Os.IsSerialConsoleDeactivatedAndSerialPortActive();
-        var isPortAvailable = Os.ShowAvailableSerialPorts("tty");
+        var isPortAvailable = Os.HasSerialPort("tty");
 
         return isSerialPortConfiguredToUseStromPi3 && isPortAvailable;
     }
 
 
     /// <summary>
-    /// Sends initilazize command to Strompi3, expects no answer
+    /// Sends initialize command to Strompi3, expects no answer
     /// </summary>
     /// <para>
     /// <remarks>Requires serial-mode</remarks>
@@ -911,3 +923,4 @@ public class StromPi3 : IStromPi3
         return result;
     }
 }
+
