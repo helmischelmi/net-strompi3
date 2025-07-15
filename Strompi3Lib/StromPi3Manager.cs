@@ -20,6 +20,19 @@ namespace Strompi3Lib;
 public static class StromPi3Manager
 {
 
+
+    public static EConnectionState ConnectionState
+    {
+        get
+        {
+            return Os.IsSerialConsoleDeactivatedAndSerialPortActive() && Os.HasSerialPort("tty")
+                ? EConnectionState.UART_Connected
+                : EConnectionState.UART_NotConnected;
+        }
+    }
+
+
+
     /// <summary>
     /// Gets the current status of the StromPi3.
     /// </summary>
@@ -227,19 +240,20 @@ public static class StromPi3Manager
         }
     }
 
-    public static EConnectionState CheckConnection()
-    {
-        using (var spManager = new SerialPortManager())
-        {
-            spManager.Open();
+    //public static EConnectionState CheckConnection()
+    //{
 
-            var stromPi3 = new StromPi3(spManager);
+    //    using (var spManager = new SerialPortManager())
+    //    {
+    //        spManager.Open();
 
-            var connectionState = stromPi3.ConnectionState;
+    //        var stromPi3 = new StromPi3(spManager);
+
+    //        var connectionState = stromPi3.ConnectionState;
             
-            Console.WriteLine($"ConnectionState is {connectionState}.");
+    //        Console.WriteLine($"ConnectionState is {connectionState}.");
 
-            return connectionState;
-        }
-    }
+    //        return connectionState;
+    //    }
+    //}
 }

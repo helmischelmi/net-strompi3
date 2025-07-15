@@ -26,16 +26,6 @@ public class StromPi3 : IStromPi3
     public StromPi3Configuration Cfg { get; private set; }
     public UpsMonitor UpsMonitor { get; }
 
-    public EConnectionState ConnectionState
-    {
-        get
-        {
-            return Os.IsSerialConsoleDeactivatedAndSerialPortActive() && Os.HasSerialPort("tty")
-                ? EConnectionState.UART_Connected
-                : EConnectionState.UART_NotConnected;
-        }
-    }
-
 
     public StromPi3(SerialPortManager portManager, bool bSilent = false)
     {

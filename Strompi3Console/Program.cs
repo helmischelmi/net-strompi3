@@ -71,7 +71,7 @@ public class Program
                         ShowTitleInteractive(SubTitle, "Check Connection of StromPi3:");
                         Console.WriteLine();
                         Console.WriteLine();
-                        StromPi3Manager.CheckConnection();
+                        var state =StromPi3Manager.ConnectionState;
                         break;
 
                     case ConsoleKey.D2:
