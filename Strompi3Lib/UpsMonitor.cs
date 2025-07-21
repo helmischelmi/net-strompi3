@@ -10,6 +10,9 @@ namespace Strompi3Lib;
 
 public class UpsMonitor
 {
+    private readonly ShutdownCoordinator _shutdownCoordinator;
+
+
     private const string PowerFailureMessage = "StromPiPowerfail";
     private const string ShutDownMessage = "ShutdownRaspberryPi";
     private const string PowerBackMessage = "StromPiPowerBack";
@@ -22,9 +25,18 @@ public class UpsMonitor
     public UpsMonitor(StromPi3 strompi3)
     {
         _strompi3 = strompi3;
+        _shutdownCoordinator = _strompi3.ShutdownCoordinator;
+        
         State = EUpsState.PowerOk;
         _strompi3.PortManager.PowerChangeDetected += OnPowerChanged;
         Console.WriteLine("OnPowerChanged registriert");
+    }
+
+
+    public void DeRegisterPowerChange()
+    {
+        _strompi3.PortManager.PowerChangeDetected -= OnPowerChanged;
+        Console.WriteLine("OnPowerChanged deregistriert");
     }
 
 
@@ -55,6 +67,7 @@ public class UpsMonitor
     private void HandleShutDown()
     {
         Console.WriteLine(" - OnShutDown erkannt");
+        
         SetState(EUpsState.ShutdownNow);
         PerformShutdown();
     }
@@ -100,6 +113,8 @@ public class UpsMonitor
 
         if (State == EUpsState.PowerIsMissing)
         {
+            Console.WriteLine("Countdown finished – Shutdown will be initiated.");
+            _ = _shutdownCoordinator.OnShutdownRequestedAsync();
             PerformShutdown();// Countdown abgelaufen, Shutdown starten
         }
         else
@@ -123,8 +138,12 @@ public class UpsMonitor
 
         SmtpMailer.SendEmail(SmtpConfiguration.GetDefaultConfiguration(), "LurchiCam shuts down", $"Got ShutDown-Signal from StromPi3 at {DateTime.Now.ToLongTimeString()}!");
         
-        Task.Delay(2000).Wait();
-        Os.ShutDown();
+        Console.WriteLine(" Shutdown wird eingeleitet.");
+        // Shutdown SEQUENZ starten (asynchron!)
+        _ = _shutdownCoordinator.OnShutdownRequestedAsync();
+
+        //Task.Delay(2000).Wait();
+        //Os.ShutDown();
     }
 
 

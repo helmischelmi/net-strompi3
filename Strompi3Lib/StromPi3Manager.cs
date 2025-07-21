@@ -19,7 +19,7 @@ namespace Strompi3Lib;
 /// </summary>
 public static class StromPi3Manager
 {
-
+    private static ShutdownCoordinator ShutdownCoordinator;
 
     public static EConnectionState ConnectionState
     {
@@ -41,7 +41,7 @@ public static class StromPi3Manager
         using (var spManager = new SerialPortManager())
         {
             spManager.Open();
-            var stromPi3 = new StromPi3(spManager);
+            var stromPi3 = new StromPi3(spManager,ShutdownCoordinator);
 
             stromPi3.ReceiveStatus();
 
@@ -58,7 +58,7 @@ public static class StromPi3Manager
         using (var spManager = new SerialPortManager())
         {
             spManager.Open();
-            var stromPi3 = new StromPi3(spManager);
+            var stromPi3 = new StromPi3(spManager, ShutdownCoordinator);
             stromPi3.ReceiveStatus();
             Console.WriteLine(stromPi3.ToString());
 
@@ -79,7 +79,7 @@ public static class StromPi3Manager
         using (var spManager = new SerialPortManager())
         {
             spManager.Open();
-            var stromPi3 = new StromPi3(spManager);
+            var stromPi3 = new StromPi3(spManager, ShutdownCoordinator);
             result = stromPi3.ReceiveStatus();
 
             Console.WriteLine("Drücken Sie 'Q', um das Programm zu beenden.");
@@ -128,7 +128,7 @@ public static class StromPi3Manager
         using (var spManager = new SerialPortManager())
         {
             spManager.Open();
-            var stromPi3 = new StromPi3(spManager);
+            var stromPi3 = new StromPi3(spManager, ShutdownCoordinator);
 
             stromPi3.ReceiveStatus();
             stromPi3.ToString();
@@ -161,7 +161,7 @@ public static class StromPi3Manager
         using (var spManager = new SerialPortManager())
         {
             spManager.Open();
-            var stromPi3 = new StromPi3(spManager);
+            var stromPi3 = new StromPi3(spManager, ShutdownCoordinator);
 
             stromPi3.ReceiveStatus();
 
@@ -192,7 +192,7 @@ public static class StromPi3Manager
         using (var spManager = new SerialPortManager())
         {
             spManager.Open();
-            var stromPi3 = new StromPi3(spManager);
+            var stromPi3 = new StromPi3(spManager,ShutdownCoordinator);
 
             stromPi3.ReceiveStatus();//  Statusabfrage
 
@@ -228,7 +228,7 @@ public static class StromPi3Manager
         {
             spManager.Open();
 
-            var stromPi3 = new StromPi3(spManager);
+            var stromPi3 = new StromPi3(spManager,ShutdownCoordinator);
 
             stromPi3.ReceiveStatus();
 
@@ -240,20 +240,5 @@ public static class StromPi3Manager
         }
     }
 
-    //public static EConnectionState CheckConnection()
-    //{
-
-    //    using (var spManager = new SerialPortManager())
-    //    {
-    //        spManager.Open();
-
-    //        var stromPi3 = new StromPi3(spManager);
-
-    //        var connectionState = stromPi3.ConnectionState;
-            
-    //        Console.WriteLine($"ConnectionState is {connectionState}.");
-
-    //        return connectionState;
-    //    }
-    //}
+  
 }

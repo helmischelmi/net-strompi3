@@ -13,6 +13,7 @@ namespace Strompi3Lib;
 public class StromPi3 : IStromPi3
 {
     public readonly SerialPortManager PortManager;
+    public readonly ShutdownCoordinator ShutdownCoordinator;
 
     public const int GPIOShutdownPinBoardNumber = 40;
 
@@ -27,9 +28,10 @@ public class StromPi3 : IStromPi3
     public UpsMonitor UpsMonitor { get; }
 
 
-    public StromPi3(SerialPortManager portManager, bool bSilent = false)
+    public StromPi3(SerialPortManager portManager, ShutdownCoordinator shutdownCoordinator, bool bSilent = false)
     {
         PortManager = portManager;
+        ShutdownCoordinator = shutdownCoordinator;
 
         UpsMonitor = new UpsMonitor(this);
 
