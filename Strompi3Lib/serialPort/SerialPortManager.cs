@@ -11,15 +11,20 @@ namespace Strompi3Lib.serialPort;
 /// <summary>
 /// Manages the serial port communication with customizable setting.
 /// Implementing IDisposable for resource management.
+/// No more automatic open/close per individual access!
+/// The port remains permanently open so that asynchronous events can be detected at any time.
+/// All active access (sending, status querying) is synchronized (lock (_portLock)) to prevent collisions between the event handler and the user thread.
+/// Polling (e.g., every 30 minutes) continues to function because the port remains open.
 /// </summary>
 public class SerialPortManager : IDisposable
 {
     private readonly SerialPort _serialPort;
 
     // Puffer für Befehlsantworten
-    private readonly BlockingCollection<string> _commandResponses = new BlockingCollection<string>();
-
-
+    private readonly BlockingCollection<string> _commandResponses = new();
+    
+    private readonly object _portLock = new(); // Für Synchronisierung!
+    private bool _disposed = false;
     /// <summary>
     ///  Event für asynchrone Ereignisse (z. B. Power-Fail)
     /// event is triggered when a power failure signal is received
@@ -73,6 +78,8 @@ public class SerialPortManager : IDisposable
         };
 
         _serialPort.DataReceived += DataReceivedEventHandler;
+
+        _serialPort.Open(); // Port direkt beim Start öffnen
     }
 
 
@@ -159,10 +166,7 @@ public class SerialPortManager : IDisposable
     }
 
 
-    //public string SendCommand(string command, bool expectResponse, int expectedResponseLines)
-    //{
-    //    return SendCommand(new string[] { command }, null, expectResponse, expectedResponseLines);
-    //}
+   
 
 
     /// <summary>
@@ -179,87 +183,60 @@ public class SerialPortManager : IDisposable
     /// <exception cref="ArgumentException"></exception>
     public string SendCommand(string[] commands, int[]? delays, bool expectResponse, int expectedResponseLines)
     {
-        if (commands == null || commands.Length == 0)
-            throw new ArgumentException("commands darf nicht null oder leer sein.");
-
-        // Leere den Puffer, um Altlasten zu entfernen.
-        while (_commandResponses.TryTake(out string discard)) { }
-
-
-        // Sende alle Befehle der Reihe nach
-        for (int i = 0; i < commands.Length; i++)
+        lock (_portLock)
         {
-            _serialPort.Write(commands[i]);
-            Console.WriteLine($"Command sent: {commands[i]}");
+            if (_disposed)
+                throw new ObjectDisposedException(nameof(SerialPortManager));
 
-            // Falls für diesen Schritt eine Wartezeit definiert ist, dann warten
-            if (delays != null && i < delays.Length && delays[i] > 0)
+            if (!_serialPort.IsOpen)
+                throw new InvalidOperationException("Serial port not open!");
+
+            while (_commandResponses.TryTake(out _)) { }
+
+            for (int i = 0; i < commands.Length; i++)
             {
-                Thread.Sleep(delays[i]);
-            }
-        }
+                _serialPort.Write(commands[i]);
+                Console.WriteLine($"Command sent: {commands[i]}");
 
-        if (expectResponse)
-        {
-            // Warte darauf, dass die erwartete Anzahl an Zeilen empfangen wird.
-            List<string> lines = new List<string>();
-            for (int i = 0; i < expectedResponseLines; i++)
-            {
-                try
-                {
-                    // Blockiert, bis eine Zeile verfügbar ist.
-                    string line = _commandResponses.Take();
-                    lines.Add(line);
-                }
-                catch (TimeoutException ex)
-                {
-                    Console.WriteLine($"Timeout beim Warten auf Zeile {i}: " + ex.Message);
-                    break;
-                }
+                if (delays != null && i < delays.Length && delays[i] > 0)
+                    Thread.Sleep(delays[i]);
             }
-            return string.Join(Environment.NewLine, lines);
-        }
-        else
-        {
-            return string.Empty;
+
+            if (expectResponse)
+            {
+                List<string> lines = new();
+                for (int i = 0; i < expectedResponseLines; i++)
+                {
+                    try
+                    {
+                        string line = _commandResponses.Take();
+                        lines.Add(line);
+                    }
+                    catch (TimeoutException ex)
+                    {
+                        Console.WriteLine($"Timeout waiting for line {i}: " + ex.Message);
+                        break;
+                    }
+                }
+                return string.Join(Environment.NewLine, lines);
+            }
+            else
+            {
+                return string.Empty;
+            }
         }
     }
 
-
-    /// <summary>
-    /// Reads a response string from the Strompi3 device.
-    /// </summary>
-    /// <returns>A string representing the response from the device.</returns>
-    //public string ReadLine()
-    //{
-    //    try
-    //    {
-    //        string response = _serialPort.ReadLine();
-    //        Console.WriteLine("Response received: " + response);
-    //        return response;
-    //    }
-    //    catch (TimeoutException ex)
-    //    {
-    //        Console.WriteLine($"Timeout occurred while reading from the serial port: {ex.Message}");
-    //        return "Timeout";
-    //    }
-    //}
-
-
-
     public void Dispose()
     {
-        Close();
+        _disposed = true;
+        if (_serialPort.IsOpen)
+            _serialPort.Close();
+        _serialPort.DataReceived -= DataReceivedEventHandler;
         _serialPort.Dispose();
-
-        // Deregistrieren aller Eventhandler vom PowerChangeDetected-Event
         PowerChangeDetected = null;
-
         _commandResponses.Dispose();
         GC.SuppressFinalize(this);
-
-        // Optional: Finalizer unterdrücken
-        //  GC.SuppressFinalize(this);
     }
 
     public override string ToString()

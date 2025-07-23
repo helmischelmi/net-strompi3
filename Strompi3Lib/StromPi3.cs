@@ -9,11 +9,10 @@ using Pi.Common;
 namespace Strompi3Lib;
 
 
-
 public class StromPi3 : IStromPi3
 {
     public readonly SerialPortManager PortManager;
-    public readonly ShutdownCoordinator ShutdownCoordinator;
+    public readonly IShutdownCoordinator ShutdownCoordinator;
 
     public const int GPIOShutdownPinBoardNumber = 40;
 
@@ -28,10 +27,10 @@ public class StromPi3 : IStromPi3
     public UpsMonitor UpsMonitor { get; }
 
 
-    public StromPi3(SerialPortManager portManager, ShutdownCoordinator shutdownCoordinator, bool bSilent = false)
+    public StromPi3(SerialPortManager serialPortManager, IShutdownCoordinator shutdownCoordinator, bool bSilent = false)
     {
-        PortManager = portManager;
-        ShutdownCoordinator = shutdownCoordinator;
+        PortManager = serialPortManager ?? throw new ArgumentNullException(nameof(serialPortManager));
+        ShutdownCoordinator = shutdownCoordinator ?? throw new ArgumentNullException(nameof(shutdownCoordinator));
 
         UpsMonitor = new UpsMonitor(this);
 
@@ -40,7 +39,6 @@ public class StromPi3 : IStromPi3
             throw new Exception("Serial port not available for Strompi3");
         }
     }
-
 
 
     /// <summary>
@@ -77,7 +75,7 @@ public class StromPi3 : IStromPi3
         string[] cmds = new string[] { "quit", "\r" };
         int[]? delays = new int[] { BreakShort, BreakLong };
 
-        PortManager.SendCommand(cmds, delays, false,0);
+        PortManager.SendCommand(cmds, delays, false, 0);
     }
 
     /// <summary>
@@ -103,7 +101,7 @@ public class StromPi3 : IStromPi3
             return configuration;
         }
 
-         // Zeilenweise Verarbeitung der Antwort:
+        // Zeilenweise Verarbeitung der Antwort:
         // Zeile 0: StromPi3-Zeit, Zeile 1: Datum
         configuration.GetRTCDateTime(lines[0], lines[1]);
 
@@ -672,7 +670,7 @@ public class StromPi3 : IStromPi3
         }
     }
 
-   
+
     /// <summary>
     /// Transfers the configuration of the Strompi3 to the device.
     /// </summary>
@@ -761,7 +759,7 @@ public class StromPi3 : IStromPi3
         int[]? delays = new int[] { BreakShort, BreakLong };
 
 
-        string response = PortManager.SendCommand(cmds, delays, false,0);
+        string response = PortManager.SendCommand(cmds, delays, false, 0);
 
 
         Console.WriteLine($"serial Write {(int)configElement} {value} transfer successfull..");
@@ -777,8 +775,8 @@ public class StromPi3 : IStromPi3
     public void PowerOffStromPi3()
     {
         //"quit", BreakShort, "\r","poweroff", Sleep(1000), "\r"
-        string[] cmds = new string[] { "quit", "\r", "poweroff", "\r"};
-        int[]? delays = new int[] { BreakShort,0, 1000 };
+        string[] cmds = new string[] { "quit", "\r", "poweroff", "\r" };
+        int[]? delays = new int[] { BreakShort, 0, 1000 };
 
         PortManager.SendCommand(cmds, delays, false, 0);
 
@@ -823,9 +821,9 @@ public class StromPi3 : IStromPi3
             Console.WriteLine($"serial write 'set-date {argumentsDate}'");
 
             // "Q", Sleep(1000), "\r", Sleep(1000),"set-date {argumentsDate}", BreakLong, "\r", Sleep(1000)
-            string[] cmdsDate = new string[] { "Q", "\r", $"set-date {argumentsDate}", "\r"};
+            string[] cmdsDate = new string[] { "Q", "\r", $"set-date {argumentsDate}", "\r" };
             int[]? delaysDate = new int[] { 1000, 1000, BreakLong, 1000 };
-            
+
             PortManager.SendCommand(cmdsDate, delaysDate, false, 0);
 
 
@@ -836,11 +834,11 @@ public class StromPi3 : IStromPi3
             // Sende "set-clock" Befehl, um die Uhrzeit zu setzen
             Thread.Sleep(100);
             //"set-clock {argumentsTime}", BreakLong, "\r"
-            string[] cmds = new string[] { $"set-clock {argumentsTime}", "\r"};
+            string[] cmds = new string[] { $"set-clock {argumentsTime}", "\r" };
             int[]? delays = new int[] { BreakLong, 0 };
 
             PortManager.SendCommand(cmds, delays, false, 0);
-            
+
             Cfg = ReceiveStatus();  // re-read to get the updated datetime
 
             Console.WriteLine("-----------------------------------");
@@ -914,5 +912,8 @@ public class StromPi3 : IStromPi3
 
         return result;
     }
+
+
+
 }
 

@@ -10,7 +10,7 @@ namespace Strompi3Lib;
 
 public class UpsMonitor
 {
-    private readonly ShutdownCoordinator _shutdownCoordinator;
+    private readonly IShutdownCoordinator _shutdownCoordinator;
 
 
     private const string PowerFailureMessage = "StromPiPowerfail";
@@ -114,7 +114,6 @@ public class UpsMonitor
         if (State == EUpsState.PowerIsMissing)
         {
             Console.WriteLine("Countdown finished – Shutdown will be initiated.");
-            _ = _shutdownCoordinator.OnShutdownRequestedAsync();
             PerformShutdown();// Countdown abgelaufen, Shutdown starten
         }
         else
@@ -123,6 +122,13 @@ public class UpsMonitor
         }
     }
 
+
+    /// <summary>
+    /// Initiates the system shutdown process in response to a shutdown signal.
+    /// </summary>
+    /// <remarks>This method sets the system state to indicate an imminent shutdown, logs relevant
+    /// configuration  and status details, sends a notification email, and triggers the asynchronous shutdown
+    /// sequence.</remarks>
     private void PerformShutdown()
     {
         SetState(EUpsState.ShutdownNow);
@@ -138,9 +144,8 @@ public class UpsMonitor
 
         SmtpMailer.SendEmail(SmtpConfiguration.GetDefaultConfiguration(), "LurchiCam shuts down", $"Got ShutDown-Signal from StromPi3 at {DateTime.Now.ToLongTimeString()}!");
         
-        Console.WriteLine(" Shutdown wird eingeleitet.");
-        // Shutdown SEQUENZ starten (asynchron!)
-        _ = _shutdownCoordinator.OnShutdownRequestedAsync();
+        
+        _ = _shutdownCoordinator.OnShutdownRequestedAsync();// start shutdown SEQUENZ (asynchron!)
 
         //Task.Delay(2000).Wait();
         //Os.ShutDown();

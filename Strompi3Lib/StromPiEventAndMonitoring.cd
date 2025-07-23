@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1">
   <Class Name="Strompi3Lib.serialPort.SerialPortManager">
-    <Position X="0.5" Y="3.5" Width="3" />
+    <Position X="0.5" Y="4.25" Width="3" />
     <TypeIdentifier>
       <HashCode>AIAAAAAAACAAYACEAAAAIAhAAAAQAgAICgAEAACUAAA=</HashCode>
       <FileName>serialPort\SerialPortManager.cs</FileName>
@@ -17,12 +17,7 @@
   </Class>
   <Class Name="Strompi3Lib.StromPi3">
     <Position X="4.25" Y="0.5" Width="2.25" />
-    <AssociationLine Name="PortManager" Type="Strompi3Lib.serialPort.SerialPortManager" FixedFromPoint="true" FixedToPoint="true">
-      <Path>
-        <Point X="4.312" Y="6.67" />
-        <Point X="4.312" Y="6.938" />
-        <Point X="3.5" Y="6.938" />
-      </Path>
+    <AssociationLine Name="PortManager" Type="Strompi3Lib.serialPort.SerialPortManager">
       <MemberNameLabel ManuallyPlaced="true" ManuallySized="true">
         <Position X="0.173" Y="-0.273" Height="0.182" Width="1.222" />
       </MemberNameLabel>
@@ -39,7 +34,7 @@
       </MemberNameLabel>
     </AssociationLine>
     <TypeIdentifier>
-      <HashCode>AAAQAEAIEDAACAQEGAASAUCAAAMCAAAAAGFAQgBAAEA=</HashCode>
+      <HashCode>AAAQAEAIEDAACAQEGAASAUCAQAMCAAAAAGFAQgBAAEA=</HashCode>
       <FileName>StromPi3.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
@@ -52,16 +47,31 @@
   <Class Name="Strompi3Lib.UpsMonitor">
     <Position X="7.25" Y="1.75" Width="2.25" />
     <TypeIdentifier>
-      <HashCode>AAABDAAAAAAAAAAAAAAQAAAAAAEAAAQAEAAgRAAAAIE=</HashCode>
+      <HashCode>AAABDAAAAAAAABAAAAAQAAAAAAEAAAQAEAAgRAAAAoE=</HashCode>
       <FileName>UpsMonitor.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Strompi3Lib.StromPi3Manager">
     <Position X="0.5" Y="0.5" Width="3.25" />
     <TypeIdentifier>
-      <HashCode>AAEAAAAAAAAAAABAAQAAAAEEAAIAAAAAAACAAAAAAAE=</HashCode>
+      <HashCode>AAEAAAAAAAAAAABAAQAAAAEEQAIAAAAAAACAAAAAAAE=</HashCode>
       <FileName>StromPi3Manager.cs</FileName>
     </TypeIdentifier>
   </Class>
+  <Class Name="Strompi3Lib.ShutdownCoordinator">
+    <Position X="10" Y="2.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AIEAAAAAAAAAAAAQAAAAAAAAAACAAAAAAAABAAAAAAA=</HashCode>
+      <FileName>ShutDownCoordinator.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Interface Name="Strompi3Lib.IShutdownCoordinator">
+    <Position X="10" Y="0.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAEAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAABAAAAAAA=</HashCode>
+      <FileName>ShutDownCoordinator.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
   <Font Name="Segoe UI" Size="9" />
 </ClassDiagram>

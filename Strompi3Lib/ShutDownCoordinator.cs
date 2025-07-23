@@ -20,6 +20,8 @@ public class ShutdownCoordinator : IShutdownCoordinator
     private readonly List<IStoppableService> _services = new();
     private readonly CancellationTokenSource _shutdownTokenSource = new();
 
+    public CancellationToken ShutdownToken => _shutdownTokenSource.Token;
+
     public void RegisterService(IStoppableService service)
     {
         _services.Add(service);
@@ -39,5 +41,5 @@ public class ShutdownCoordinator : IShutdownCoordinator
         Os.ShutDown();
     }
 
-    public CancellationToken ShutdownToken => _shutdownTokenSource.Token;
+
 }
