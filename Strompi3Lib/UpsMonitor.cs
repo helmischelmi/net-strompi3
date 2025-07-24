@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Pi.Common;
 using Pi.Common.io.email;
 using Strompi3Lib.serialPort;
-
 
 namespace Strompi3Lib;
 
@@ -42,7 +40,6 @@ public class UpsMonitor
 
     /// <summary>
     /// event handler, registered to the powerChangeDetected event of StromPi3.
-    /// 
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
@@ -144,11 +141,8 @@ public class UpsMonitor
 
         SmtpMailer.SendEmail(SmtpConfiguration.GetDefaultConfiguration(), "LurchiCam shuts down", $"Got ShutDown-Signal from StromPi3 at {DateTime.Now.ToLongTimeString()}!");
         
-        
         _ = _shutdownCoordinator.OnShutdownRequestedAsync();// start shutdown SEQUENZ (asynchron!)
 
-        //Task.Delay(2000).Wait();
-        //Os.ShutDown();
     }
 
 
