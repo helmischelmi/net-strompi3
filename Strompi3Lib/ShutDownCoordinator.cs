@@ -31,24 +31,19 @@ public class ShutdownCoordinator : IShutdownCoordinator
     private CancellationToken _shutdownToken;
     public CancellationToken ShutdownToken => _shutdownToken;
 
-    
-    public ShutdownCoordinator(CancellationToken shutdownToken)
-    {
-        _shutdownToken = shutdownToken;
-    }
-    
-
-    public void RegisterService(IStoppableService service)
-    {
-        _services.Add(service);
-    }
-
+    public ShutdownCoordinator() { }
 
     public void SetToken(CancellationToken token)
     {
         _shutdownToken = token;
     }
 
+
+
+    public void RegisterService(IStoppableService service)
+    {
+        _services.Add(service);
+    }
 
 
     public async Task OnShutdownRequestedAsync(bool shutDownRaspberry= true)
