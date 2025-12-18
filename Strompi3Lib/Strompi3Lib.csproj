@@ -28,6 +28,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Pi.Common\Pi.Common.csproj" />
+    <ProjectReference Include="..\..\Pi.Common\Pi.Common\Pi.Common.csproj" />
   </ItemGroup>
 
 

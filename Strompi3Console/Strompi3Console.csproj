@@ -15,6 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Pi.Common\Pi.Common\Pi.Common.csproj" />
     <ProjectReference Include="..\Strompi3Lib\Strompi3Lib.csproj" />
   </ItemGroup>
 

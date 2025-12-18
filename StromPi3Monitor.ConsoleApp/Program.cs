@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Pi.Common.utils;
-using Strompi3Lib.Common;
 using StromPi3Monitor.ConsoleApp.HardwareAbstraction;
 using StromPi3Monitor.ConsoleApp.Services;
 
