@@ -15,11 +15,11 @@
 
   <ItemGroup>
     <PackageReference Include="InputSimulatorCore" Version="1.0.5" />
-    <PackageReference Include="Spectre.Console" Version="0.50.0" />
-    <PackageReference Include="System.IO.Ports" Version="9.0.7" />
-    <PackageReference Include="Iot.Device.Bindings" Version="4.0.1" />
-    <PackageReference Include="System.Device.Gpio" Version="4.0.1" />
-    <PackageReference Include="System.Text.Json" Version="9.0.7" />
+    <PackageReference Include="Spectre.Console" Version="0.57.2" />
+    <PackageReference Include="System.IO.Ports" Version="10.0.10" />
+    <PackageReference Include="Iot.Device.Bindings" Version="4.2.0" />
+    <PackageReference Include="System.Device.Gpio" Version="4.2.0" />
+    <PackageReference Include="System.Text.Json" Version="10.0.10" />
   </ItemGroup>
 
   <ItemGroup>
@@ -28,7 +28,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Pi.Common\Pi.Common.csproj" />
-    <ProjectReference Include="..\..\Pi.Common\Pi.Common\Pi.Common.csproj" />
   </ItemGroup>
 
 

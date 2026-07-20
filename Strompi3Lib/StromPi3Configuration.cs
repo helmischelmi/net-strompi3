@@ -247,15 +247,12 @@ public class StromPi3Configuration
         return misMatches.Count == 0;
     }
 
-
-
     public override string ToString()
     {
         // Create a table
         AnsiConsole.Foreground = Color.Yellow;
         var table = new Table();
         table.Title = new TableTitle("[yellow]StromPi-Status[/]");
-        table.LeftAligned();
         table.BorderStyle = new Style(foreground: Color.Yellow);
 
 
@@ -296,7 +293,7 @@ public class StromPi3Configuration
         table.AddRow($"[yellow]Output              = {VoltageMeter.OutputVolt:F2} Volt[/]", "");
         table.AddRow($"[yellow]LifePo4-Battery-Hat = {VoltageMeter.BatteryVolt:F2} Volt[/]", $"[yellow]Level: {ConverterHelper.GetEnumDescription(BatteryHat.Level).EscapeMarkup()}, Charging [[{BatteryHat.IsCharging}]][/]");
 
-        AnsiConsole.Write(table);// Render the table to the console
+        AnsiConsole.Write(Align.Left(table)); // Render the table to the console
 
         // The rest of the method remains unchanged
         string status = string.Empty;
@@ -340,6 +337,55 @@ public class StromPi3Configuration
         //status += $"LifePo4-Battery-Hat =  {VoltageMeter.BatteryVolt:F2} Volt            Level: {ConverterHelper.GetEnumDescription(BatteryHat.Level)}, " +
         //          $"Charging [{BatteryHat.IsCharging}]" + Environment.NewLine;
         //status += "-----------------------------------------------------------------------------" + Environment.NewLine;
+
+        return status;
+    }
+
+    public string Report()
+    {
+        // The rest of the method remains unchanged
+        string status = string.Empty;
+        //status = "------------------------- StromPi-Status ------------------------------------" + Environment.NewLine;
+        status += $"Firmware:       {FirmwareVersion,-27} DateTime: {CurrentDateTime} " + Environment.NewLine;
+        status += $"Serialless-Mode: {SerialLessEnable,-26}" + Environment.NewLine;
+        status += "-----------------------------------------------------------------------------" + Environment.NewLine;
+        status += $"Power-Priority: {ConverterHelper.GetEnumDescription(PriorityModeMode),-27} Power-Source:   {PowerInputSource}" + Environment.NewLine;
+        status += "-----------------------------------------------------------------------------" + Environment.NewLine;
+        status += $"Powerfail Warning: {PowerFailWarningEnable,-24} Battery-Level Shutdown: {ConverterHelper.GetEnumDescription(BatteryHat.BatteryShutdownLevel)}" + Environment.NewLine;
+        status += $"Powerfail-Counter: {PowerFailureCounter}" + Environment.NewLine;
+        status += $"Pi Shutdown Timer Mode: {ShutdownEnable,-19} Timer: {ShutdownSeconds} seconds" + Environment.NewLine;
+        status += "-----------------------------------------------------------------------------" + Environment.NewLine;
+        status += $"Power Save Mode: {StartStopSettings.PowersaveEnable}" + Environment.NewLine;
+        status += $"PowerOff Mode: {StartStopSettings.PowerOffMode}" + Environment.NewLine;
+        //status += "-----------------------------------------------------------------------------" + Environment.NewLine;
+        status += $"PowerOn-Button: {StartStopSettings.PowerOnButtonEnable,-27} Timer: {StartStopSettings.PowerOnButtonSeconds} seconds" + Environment.NewLine;
+        status += "-----------------------------------------------------------------------------" + Environment.NewLine;
+
+        status += "----------------------------- Alarm-Modes -----------------------------------" + Environment.NewLine;
+        if (StartStopSettings.PoweroffTimeEnableMode)
+            status += $" Alarm-Mode: Minute WakeUp-Alarm" + Environment.NewLine;
+        else
+        {
+            status += $"Alarm-Mode: {AlarmSettings.Mode}" + Environment.NewLine;
+        }
+        //status += $"Alarm Weekday: {AlarmSettings.WakeUpWeekday}" + Environment.NewLine;
+
+        //status += $"WakeUp-Alarm: {AlarmSettings.WakeupEnable,-25} Alarm at: {AlarmSettings.WakeUpDay:00}:{AlarmSettings.WakeUpMonth:00} [DD:MM] {AlarmSettings.WakeUpHour:00}:{AlarmSettings.WakeUpMinute:00} [hh:mm]" + Environment.NewLine;
+
+        //status += $"Weekend Wakeup: {AlarmSettings.WakeUpWeekendEnable}" + Environment.NewLine;
+        //status += $"Minute Wakeup Timer: {AlarmSettings.WakeupTimerMinutes} minutes" + Environment.NewLine;
+        //status += "-----------------------------------------------------------------------------" + Environment.NewLine;
+        //status += $"PowerOff-Alarm: {AlarmSettings.PowerOffEnable,-27} With Off-Time: {AlarmSettings.PowerOffHour:00}:{AlarmSettings.PowerOffMinute:00} [hh:mm]" + Environment.NewLine;
+        //status += "-----------------------------------------------------------------------------" + Environment.NewLine;
+        //status += $"Interval-Alarm: {AlarmSettings.IntervalAlarmEnable,-27} On-minutes: {AlarmSettings.IntervalAlarmOnMinutes}, Off-minutes: {AlarmSettings.IntervalAlarmOffMinutes}" + Environment.NewLine;
+        //status += "-----------------------------------------------------------------------------" + Environment.NewLine;
+
+        status += "------------------------------ Voltage-Levels -------------------------------" + Environment.NewLine;
+        status += $"Wide-Range          = {VoltageMeter.WideRangeVolt:F2} Volt            microUSB = {VoltageMeter.mUsbVolt:F2} Volt" + Environment.NewLine;
+        status += $"Output              =  {VoltageMeter.OutputVolt:F2} Volt" + Environment.NewLine;
+        status += $"LifePo4-Battery-Hat =  {VoltageMeter.BatteryVolt:F2} Volt            Level: {ConverterHelper.GetEnumDescription(BatteryHat.Level)}, " +
+                  $"Charging [{BatteryHat.IsCharging}]" + Environment.NewLine;
+        status += "-----------------------------------------------------------------------------" + Environment.NewLine;
 
         return status;
     }

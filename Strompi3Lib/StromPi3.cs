@@ -4,6 +4,7 @@ using System;
 using System.Threading;
 using Strompi3Lib.serialPort;
 using System.Device.Gpio;
+using System.Device.Gpio.Drivers;
 using Pi.Common;
 
 namespace Strompi3Lib;
@@ -322,7 +323,7 @@ public class StromPi3 : IStromPi3
             }
             else // reset to serial port
             {
-                using (var gpioController = new GpioController(PinNumberingScheme.Board))
+                using (var gpioController = new GpioController(new RaspberryPi3Driver()))
                 {
                     gpioController.OpenPin(GPIOShutdownPinBoardNumber);
                     gpioController.SetPinMode(GPIOShutdownPinBoardNumber, PinMode.Output);
